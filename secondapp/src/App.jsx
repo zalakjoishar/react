@@ -8,19 +8,25 @@ import C from './component/C'
 import D from './component/D'
 import E from './component/E'
 import F from './component/F'
+import B from './component/B'
+import J from './component/J'
+import GithubCard from './component/GithubCard'
 
 function App() {
   const [count, setCount] = useState(0)
 
   return (
     <>
-      <Counter/>
+      {/* <Counter/>
       <hr />
       <A/>
       <C/>
       <D/>
       <E/>
       <F/>
+      <B/>
+      <J/> */}
+      <GithubCard/>
     </>
   )
 }
