@@ -11,6 +11,9 @@ import F from './component/F'
 import B from './component/B'
 import J from './component/J'
 import GithubCard from './component/GithubCard'
+import ShortCircuit from './component/ShortCircuit'
+import R from './component/R'
+import User from './component/User'
 
 function App() {
   const [count, setCount] = useState(0)
@@ -25,8 +28,16 @@ function App() {
       <E/>
       <F/>
       <B/>
-      <J/> */}
-      <GithubCard/>
+      <J/>
+      <GithubCard/> */}
+      <ShortCircuit/>
+      <hr />
+      <User id={101} name={"Zia"} desc={"15"}/>
+      <hr />
+      <User id={102} name={"Zalak"} desc={"20"}/>
+      <hr />
+      <User id={103} name={"Yash"} desc={"21"}/>
+      <hr />
     </>
   )
 }

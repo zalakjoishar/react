@@ -3,6 +3,7 @@ import React, { useEffect, useState } from 'react'
 function GithubCard() {
     const [data,setData]=useState(null)
     const [rdata,setRdata]=useState([])
+    const [keyword,setKeyword]=useState("")
     const fetchData=()=>{
         fetch("https://api.github.com/users/zalakjoishar").then(res=>res.json()).then(data=>{
             setData(data)
@@ -27,7 +28,9 @@ function GithubCard() {
                     </div>} 
                 </div>
                 <div className="col">
-                    {rdata.map((r,index)=>
+                    <h1>Keyword is {keyword}</h1>
+                    <input type="text" onChange={(e)=>setKeyword(e.target.value)} />
+                    {rdata.filter(r=>r.name.toLowerCase().includes(keyword.toLowerCase())).map((r,index)=>
                     <div className="card text-white bg-warning mb-3" style={{ maxWidth: 18 + "rem" }} key={index}>
                         <div className="card-header">{r.name}
                         </div>
