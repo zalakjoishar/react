@@ -1,14 +1,15 @@
 import { useState } from 'react'
 import reactLogo from './assets/react.svg'
 import viteLogo from '/vite.svg'
-import AllRecipies from './component/AllRecipies'
-import FileExample from './component/FileExample'
+import './App.css'
+import A from './component/A'
 
 function App() {
+  const [count, setCount] = useState(0)
+
   return (
     <>
-      {/* <AllRecipies/> */}
-      <FileExample/>
+      <A/>
     </>
   )
 }
