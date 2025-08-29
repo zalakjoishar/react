@@ -4,6 +4,8 @@ import A from './component/A'
 import P from './component/P'
 import Parent from './component/Parent'
 import ReducerExample from './component/ReducerExample'
+import ReducerExample2 from './component/ReducerExample2'
+import RefExample from './component/RefExample'
 
 function App() {
   const [count, setCount] = useState(0)
@@ -12,8 +14,10 @@ function App() {
     <>
       {/* <A/>
       <P/>
-      <Parent/> */}
+      <Parent/>
       <ReducerExample/>
+      <ReducerExample2/> */}
+      <RefExample/>
     </>
   )
 }
