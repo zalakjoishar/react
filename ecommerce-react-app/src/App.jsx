@@ -1,11 +1,12 @@
 import { Children, useState } from 'react'
-import reactLogo from './assets/react.svg'
-import viteLogo from '/vite.svg'
 import './App.css'
 import Home from './components/Home'
 import About from './components/About'
 import Contact from './components/Contact'
+import Layout from './components/Layout'
 import {createBrowserRouter,RouterProvider} from 'react-router-dom'
+import AllProducts from './components/products/AllProducts'
+import ProductDetail from './components/products/ProductDetail'
 
 const routes=createBrowserRouter([
   {
@@ -15,6 +16,14 @@ const routes=createBrowserRouter([
       {
       index:true,
       element:<Home/>
+      },
+      {
+      path:"products",
+      element:<AllProducts/>
+      },
+      {
+      path:"products/:id",
+      element:<ProductDetail/>
       },
       {
       index:"about",
