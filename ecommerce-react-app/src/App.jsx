@@ -7,6 +7,7 @@ import Layout from './components/Layout'
 import {createBrowserRouter,RouterProvider} from 'react-router-dom'
 import AllProducts from './components/products/AllProducts'
 import ProductDetail from './components/products/ProductDetail'
+import AddProduct from './components/products/AddProduct'
 
 const routes=createBrowserRouter([
   {
@@ -24,6 +25,10 @@ const routes=createBrowserRouter([
       {
       path:"products/:id",
       element:<ProductDetail/>
+      },
+      {
+      path:"add-product",
+      element:<AddProduct/>
       },
       {
       index:"about",
