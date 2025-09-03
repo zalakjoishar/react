@@ -16,7 +16,7 @@ function Navbar() {
                 <Link className="nav-link active" aria-current="page" to={""}>Home</Link>
               </li>
               <li className="nav-item">
-                <Link className="nav-link active" aria-current="page" to={"/products"}>product</Link>
+                <Link className="nav-link active" aria-current="page" to={"/products"}>All-product</Link>
               </li>
               <li className="nav-item">
                 <Link className="nav-link active" aria-current="page" to={"/add-product"}>add-product</Link>
