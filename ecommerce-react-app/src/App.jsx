@@ -15,10 +15,6 @@ const routes=createBrowserRouter([
     element:<Layout/>,
     children:[
       {
-      index:true,
-      element:<Home/>
-      },
-      {
       path:"products",
       element:<AllProducts/>
       },

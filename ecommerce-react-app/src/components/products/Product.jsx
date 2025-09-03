@@ -1,10 +1,12 @@
 import React from 'react'
+import UpdateProduct from './UpdateProduct'
 
-function Product({id,name,description,price}) {
+function Product({id,name,description,price,refreshProduct}) {
   const deleteProduct=()=>{
     fetch(`http://localhost:8080/products/${id}`,{method:"DELETE"}).then(res=>{
-      if (res.status=200) {
+      if (res.ok) {
         alert("product deleted")
+        refreshProduct()
       } else {
         alert("something went wrong")
       }
@@ -18,8 +20,12 @@ function Product({id,name,description,price}) {
               <p className="card-text">{name}</p>
               <p className="card-text">{description}</p>
               <p className="card-text">price : {price}</p>
-              <button className='btn btn-success mx-2'>Update</button>
-              <button className='btn btn-danger mx-2' onClick={deleteProduct}>Delete</button>
+              {/* Button trigger modal */}
+              <button type="button" className="btn btn-outline-success" data-bs-toggle="modal" data-bs-target={`#exampleModal${id}`}>
+                update
+              </button>
+              <button className='btn btn-outline-danger mx-2' onClick={deleteProduct}>Delete</button>
+              <UpdateProduct id={id} name={name} description={description} price={price}/>
             </div>
         </div>
     </div>
