@@ -1,12 +1,12 @@
 import React from 'react'
 import UpdateProduct from './UpdateProduct'
 
-function Product({id,name,description,price,refreshProduct}) {
+function Product({id,name,description,price,refreshProducts}) {
   const deleteProduct=()=>{
     fetch(`http://localhost:8080/products/${id}`,{method:"DELETE"}).then(res=>{
       if (res.ok) {
         alert("product deleted")
-        refreshProduct()
+        refreshProducts()
       } else {
         alert("something went wrong")
       }

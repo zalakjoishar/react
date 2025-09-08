@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useEffect, useState } from 'react'
 import {useForm} from 'react-hook-form'
 
 function AddProduct() {
@@ -16,9 +16,23 @@ function AddProduct() {
             },
             body:JSON.stringify(data)
         }).then(res=>res.json()).then(res=>{
+            fetch(`http://localhost:8080/product/${res.id}/category`,{
+                method:"PUT",
+                headers:{
+                    "Content-Type":"text/uri-list"
+                },
+                body:data.category
+            })
             alert(`${res.name} added`)
             reset()}).catch(error=>alert("failed to add product"))
     }
+    const [cat,setCat]=useState(null)
+    const fetchCategories=()=>{
+        fetch("http://localhost:8080/categories").then(res=>res.json()).then(data=>setCat(data["_embedded"]["categories"]))
+    }
+    useEffect(()=>{
+        fetchCategories()
+    },[])
   return (
     <div>
         <form className='container m-3 p-4 border border-secondary' onSubmit={handleSubmit(onSubmit)}>
@@ -33,7 +47,7 @@ function AddProduct() {
                 {errors.name && <div id='emailHelp' className='form-text'>{errors.name.message}</div>}
             </div>
             <div className="mb-3">
-                <label fhtmlFor="exampleInputEmail1" className="form-label">Enter description</label>
+                <label htmlFor="exampleInputEmail1" className="form-label">Enter description</label>
                 <input type="text" className="form-control" id="exampleInputEmail1" aria-describedby="emailHelp" {...register("description",{required:"description is required"})}/>
                 {errors.name && <div id='emailHelp' className='form-text'>{errors.name.message}</div>}
             </div>
@@ -41,6 +55,16 @@ function AddProduct() {
                 <label htmlFor="exampleInputEmail1" className="form-label">Enter price</label>
                 <input type="number" className="form-control" id="exampleInputEmail1" aria-describedby="emailHelp" {...register("price",{required:"price is required"})}/>
                 {errors.name && <div id='emailHelp' className='form-text'>{errors.name.message}</div>}
+            </div>
+            <div className='mb-3'>
+                <select className="form-select" aria-label="Default select example" {...register("category")}>
+                    <option defaultValue={true}>select category</option>
+                    {cat && cat .map((c,i)=><option value={c._links.self.href} key={i}>{c.name}</option>)}
+                </select>
+            </div>
+            <div className="mb-3">
+                <label htmlFor="exampleInputEmail1" className="form-label">Upload product image</label>
+                <input type="file" className="form-control" id="exampleInputEmail1" aria-describedby="emailHelp" {...register("image")}/>
             </div>
             <button type="submit" className="btn btn-primary">Submit</button>
         </form>
