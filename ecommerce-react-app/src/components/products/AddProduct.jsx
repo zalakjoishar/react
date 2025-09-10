@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react'
 import {useForm} from 'react-hook-form'
+import {ToastContainer,toast} from 'react-toastify'
 
 function AddProduct() {
     const{
@@ -8,13 +9,18 @@ function AddProduct() {
         formState:{errors},
         reset}=useForm()
     const onSubmit=(data)=>{
-        console.log(data);
+        console.log(data.category);
         fetch("http://localhost:8080/products",{
             method:"POST",
             headers:{
                 "Content-Type":"application/json"
             },
-            body:JSON.stringify(data)
+            body:JSON.stringify({
+                id:data.id,
+                name:data.name,
+                description:data.description,
+                price:data.price
+            })
         }).then(res=>res.json()).then(res=>{
             fetch(`http://localhost:8080/product/${res.id}/category`,{
                 method:"PUT",
@@ -23,8 +29,14 @@ function AddProduct() {
                 },
                 body:data.category
             })
-            alert(`${res.name} added`)
-            reset()}).catch(error=>alert("failed to add product"))
+            let formData= new FormData()
+            formData.append('product_image',data.image[0])
+            fetch(`http://localhost:8080/products/${res.id}/upload-image`,{
+                method:"POST",
+                body:formData
+            }).then(res=>res.text()).then(res=>{console.log(res)})
+            toast.success(`${res.name} added`)
+            reset()}).catch(error=>toast.error("failed to add product"))
     }
     const [cat,setCat]=useState(null)
     const fetchCategories=()=>{
@@ -67,6 +79,7 @@ function AddProduct() {
                 <input type="file" className="form-control" id="exampleInputEmail1" aria-describedby="emailHelp" {...register("image")}/>
             </div>
             <button type="submit" className="btn btn-primary">Submit</button>
+            <ToastContainer/>
         </form>
     </div>
   )
