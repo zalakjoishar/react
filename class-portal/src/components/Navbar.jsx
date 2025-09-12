@@ -17,6 +17,9 @@ function Navbar() {
                 <Link className="nav-link active" aria-current="page" to={"/student"}>All-Student</Link>
               </li>
               <li className="nav-item">
+                <Link className="nav-link active" aria-current="page" to={"/add-student"}>Add-Student</Link>
+              </li>
+              <li className="nav-item">
                 <a className="nav-link" href="#">Link</a>
               </li>
               <li className="nav-item dropdown">

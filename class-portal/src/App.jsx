@@ -4,6 +4,7 @@ import './App.css'
 import Layout from './components/Layout'
 import Student from './components/student/Student'
 import AllStudent from './components/student/AllStudent'
+import AddStudent from './components/student/AddStudent'
 
 const routes=createBrowserRouter([
   {
@@ -13,6 +14,10 @@ const routes=createBrowserRouter([
       {
         path:"student",
         element:<AllStudent />
+      },
+      {
+        path:"add-student",
+        element:<AddStudent />
       }
     ]
   }

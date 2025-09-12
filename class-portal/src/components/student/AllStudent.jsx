@@ -11,8 +11,16 @@ function AllStudent() {
   },[])
   return (
     <div>
-      <div className="col">
-        <div className="row">
+      <table className="table">
+        <thead>
+          <tr>
+            <th scope="col">Roll no</th>
+            <th scope="col">Name</th>
+            <th scope="col">Batch</th>
+            <th scope="col">Details</th>
+          </tr>
+        </thead>
+        <tbody>
           {student && student.map((s,i)=><Student key={i}
             id={s.id}
             name={s.name}
@@ -20,9 +28,10 @@ function AllStudent() {
             gender={s.gender}
             phoneNo={s.phoneNo}
             emailId={s.emailId}
+            batch={s.batch}
           />)}
-        </div>
-      </div>
+        </tbody>
+      </table>
     </div>
   )
 }

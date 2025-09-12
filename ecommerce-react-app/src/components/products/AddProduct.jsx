@@ -9,7 +9,7 @@ function AddProduct() {
         formState:{errors},
         reset}=useForm()
     const onSubmit=(data)=>{
-        console.log(data.category);
+        console.log(data);
         fetch("http://localhost:8080/products",{
             method:"POST",
             headers:{
