@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react'
 import {useForm} from 'react-hook-form'
-import { toast } from 'react-toastify'
+import { toast, ToastContainer } from 'react-toastify'
 
 function AddStudent() {
   const{
@@ -24,16 +24,22 @@ function AddStudent() {
         phoneNo:data.phoneNo,
         emailId:data.emailId,
       })
-    }).then(res=>res.json()).then(res=>{
-      fetch(`http://localhost:8080/student/${id}/batch`,{
+    }).then(res=>res.json())
+    .then(res=>{
+      console.log("Response",res);
+      
+      fetch(`http://localhost:8080/student/${data.id}/batch`,{
         method:"PUT",
         headers:{
             "Content-Type":"text/uri-list"
         },
         body:data.batch
-      }).then(res=>res.text()).then(res=>{console.log(res)})
-          toast.success(`${res.name} added`)
+      }).then(res=>res.text()).then(res=>{
+        console.log(res);
+        toast.success(`${data.name} added`)
           reset()
+      })
+          
     }).catch(error=>toast.error("failed to add product"))
   }
   const [bat,setBat]=useState(null)
@@ -96,6 +102,7 @@ function AddStudent() {
         </div>
         <button type="submit" className="btn btn-primary">Sign in</button>
       </form>
+      <ToastContainer/>
     </div>
   )
 }

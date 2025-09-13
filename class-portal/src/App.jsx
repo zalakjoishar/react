@@ -5,6 +5,7 @@ import Layout from './components/Layout'
 import Student from './components/student/Student'
 import AllStudent from './components/student/AllStudent'
 import AddStudent from './components/student/AddStudent'
+import Batch from './components/batch/Batch'
 
 const routes=createBrowserRouter([
   {
@@ -18,6 +19,10 @@ const routes=createBrowserRouter([
       {
         path:"add-student",
         element:<AddStudent />
+      },
+      {
+        path:"add-batch",
+        element:<Batch />
       }
     ]
   }
