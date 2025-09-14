@@ -2,9 +2,10 @@ import { useState } from 'react'
 import {createBrowserRouter,RouterProvider} from 'react-router-dom'
 import './App.css'
 import Layout from './components/Layout'
-import Student from './components/student/Student'
 import AllStudent from './components/student/AllStudent'
 import AddStudent from './components/student/AddStudent'
+import AddBatch from './components/batch/AddBatch'
+import ShowBatches from './components/batch/ShowBatches'
 import Batch from './components/batch/Batch'
 
 const routes=createBrowserRouter([
@@ -22,6 +23,10 @@ const routes=createBrowserRouter([
       },
       {
         path:"add-batch",
+        element:<AddBatch />
+      },
+      {
+        path:"batch",
         element:<Batch />
       }
     ]
