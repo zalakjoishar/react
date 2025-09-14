@@ -1,11 +1,14 @@
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import ShowBatches from './ShowBatches'
 
 function Batch() {
     const [batch,setBatch]=useState(null)
     const fetchBatch=()=>{
-        fetch(`http://localhost:8080/batch`).then(res=>res.json()).then(data=>SetStudent(data["_embedded"]["batches"]))
+        fetch(`http://localhost:8080/batch`).then(res=>res.json()).then(data=>setBatch(data["_embedded"]["batches"]))
     }
+    useEffect(()=>{
+        fetchBatch()
+    },[])
   return (
     <div>
         {

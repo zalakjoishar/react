@@ -7,6 +7,11 @@ import AddStudent from './components/student/AddStudent'
 import AddBatch from './components/batch/AddBatch'
 import ShowBatches from './components/batch/ShowBatches'
 import Batch from './components/batch/Batch'
+import AddClassroom from './components/AddClassroom'
+import AddEvent from './components/AddEvent'
+import AddCoordinator from './components/AddCoordinator'
+import AddTrainer from './components/AddTrainer'
+import AddSlot from './components/AddSlot'
 
 const routes=createBrowserRouter([
   {
@@ -28,6 +33,26 @@ const routes=createBrowserRouter([
       {
         path:"batch",
         element:<Batch />
+      },
+      {
+        path:"add-classRoom",
+        element:<AddClassroom />
+      },
+      {
+        path:"add-event",
+        element:<AddEvent />
+      },
+      {
+        path:"add-coordinator",
+        element:<AddCoordinator />
+      },
+      {
+        path:"add-trainer",
+        element:<AddTrainer />
+      },
+      {
+        path:"add-slot",
+        element:<AddSlot />
       }
     ]
   }

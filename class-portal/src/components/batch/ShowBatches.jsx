@@ -1,6 +1,14 @@
-import React from 'react'
+import React, { useEffect, useState } from 'react'
+import Student from '../student/Student'
 
-function ShowBatches({id,name,certifiction,genre,classRoom,trainer,coordinator}) {
+function ShowBatches({id,name,certification,genre,classRoom,trainer,coordinator}) {
+    const [student,SetStudent]=useState(null)
+  const fetchStudent=()=>{
+    fetch(`http://localhost:8080/batch/${id}/student`).then(res=>res.json()).then(data=>SetStudent(data["_embedded"]["students"]))
+  }
+  useEffect(()=>{
+    fetchStudent()
+  },[])
   return (
     <div>
         <div className="accordion" id="accordionExample">
@@ -13,8 +21,34 @@ function ShowBatches({id,name,certifiction,genre,classRoom,trainer,coordinator})
                 <div id="collapseOne" className="accordion-collapse collapse show" aria-labelledby="headingOne" data-bs-parent="#accordionExample">
                     <div className="accordion-body">
                         <strong>
-                            
-                        </strong> It is shown by default, until the collapse plugin adds the appropriate classNamees that we use to style each element. These classNamees control the overall appearance, as well as the showing and hiding via CSS transitions. You can modify any of this with custom CSS or overriding our default variables. It's also worth noting that just about any HTML can go within the <code>.accordion-body</code>, though the transition does limit overflow.
+                            certification-{certification}
+                            <br />
+                            genre-{genre}
+                            {/* classRoom-{classRoom.name}
+                            trainer-{trainer}
+                            coordinator-{coordinator} */}
+                        </strong>
+                        <table className="table">
+                            <thead>
+                                <tr>
+                                    <th scope="col">Roll no</th>
+                                    <th scope="col">Name</th>
+                                    <th scope="col">Batch</th>
+                                    <th scope="col">Details</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                            {student && student.map((s,i)=><Student key={i}
+                                id={s.id}
+                                name={s.name}
+                                age={s.age}
+                                gender={s.gender}
+                                phoneNo={s.phoneNo}
+                                emailId={s.emailId}
+                                batch={s.batch}
+                            />)}
+                            </tbody>
+                        </table>
                     </div>
                 </div>
             </div>

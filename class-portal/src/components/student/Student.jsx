@@ -2,9 +2,6 @@ import React, { useState } from 'react'
 import StudentDetails from './StudentDetails'
 
 function Student({id,name,age,gender,phoneNo,emailId,batch}) {
-  const fetchBatch=()=>{
-    fetch(`http://localhost:8080/student/${id}/batch`).then(res=>res.json()).then(data=>setBatch(data))
-  }
   return (
     <>
       <tr>

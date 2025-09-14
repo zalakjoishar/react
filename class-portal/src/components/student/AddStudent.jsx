@@ -40,7 +40,7 @@ function AddStudent() {
           reset()
       })
           
-    }).catch(error=>toast.error("failed to add product"))
+    }).catch(error=>toast.error("failed to add student"))
   }
   const [bat,setBat]=useState(null)
   const fetchBatch=()=>{
@@ -100,7 +100,7 @@ function AddStudent() {
             {bat && bat .map((c,i)=><option value={c._links.self.href} key={i}>{c.name}</option>)}
           </select>
         </div>
-        <button type="submit" className="btn btn-primary">Sign in</button>
+        <button type="submit" className="btn btn-primary">Add Student</button>
       </form>
       <ToastContainer/>
     </div>
