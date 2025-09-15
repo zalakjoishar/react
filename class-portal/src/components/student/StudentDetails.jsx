@@ -19,7 +19,7 @@ function StudentDetails({id, name, age, gender, phoneNo, emailId, batch}) {
         onClick={openModal}
         title="View Details"
       >
-        👁️ View
+        View
       </button>
       
       {isOpen && (
@@ -111,20 +111,6 @@ function StudentDetails({id, name, age, gender, phoneNo, emailId, batch}) {
               <div style={{ display: 'flex', gap: '24px', alignItems: 'flex-start' }}>
                 {/* Left side - Avatar and basic info */}
                 <div style={{ textAlign: 'center', flex: '0 0 180px' }}>
-                  <div style={{
-                    backgroundColor: '#e3f2fd',
-                    borderRadius: '50%',
-                    width: '80px',
-                    height: '80px',
-                    display: 'flex',
-                    alignItems: 'center',
-                    justifyContent: 'center',
-                    margin: '0 auto 16px',
-                    fontSize: '32px',
-                    border: '3px solid #2196f3'
-                  }}>
-                    {getGenderIcon(gender)}
-                  </div>
                   <h5 style={{ margin: '0 0 8px', color: '#333', fontSize: '1.1rem' }}>{name}</h5>
                   <p style={{ color: '#6c757d', margin: 0, fontSize: '0.9rem' }}>Student ID: #{id}</p>
                 </div>
@@ -167,7 +153,7 @@ function StudentDetails({id, name, age, gender, phoneNo, emailId, batch}) {
                       <span style={{ color: '#2196f3', fontSize: '20px' }}>⚧</span>
                       <div>
                         <div style={{ color: '#6c757d', fontSize: '0.8rem', fontWeight: '500' }}>Gender</div>
-                        <div style={{ fontWeight: '600', color: '#333' }}>{getGenderIcon(gender)} {gender}</div>
+                        <div style={{ fontWeight: '600', color: '#333' }}>{gender}</div>
                       </div>
                     </div>
                     

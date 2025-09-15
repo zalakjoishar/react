@@ -42,10 +42,10 @@ function ShowBatches({id, name, certification, genre, classRoom, trainer, coordi
           aria-controls={`collapse${index}`}
         >
           <div className="d-flex align-items-center w-100">
-            <div className="bg-primary bg-opacity-10 rounded-circle d-flex align-items-center justify-content-center me-3" 
+            {/* <div className="bg-primary bg-opacity-10 rounded-circle d-flex align-items-center justify-content-center me-3" 
                  style={{width: '40px', height: '40px'}}>
               <span className="text-primary">📚</span>
-            </div>
+            </div> */}
             <div className="flex-grow-1 text-start">
               <div className="fw-bold">{name}</div>
               <small className="text-muted">
@@ -142,7 +142,7 @@ function ShowBatches({id, name, certification, genre, classRoom, trainer, coordi
                 to={`/batch/${id}`} 
                 className="btn btn-primary"
               >
-                👁️ View Full Details
+                View Full Details
               </Link>
             </div>
           </div>

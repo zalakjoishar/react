@@ -24,23 +24,19 @@ function Student({id, name, age, gender, phoneNo, emailId, batch, refresh}) {
   }
   
   const getGenderIcon = (gender) => {
-    return gender === 'Male' ? '👨' : gender === 'Female' ? '👩' : '👤'
+    return gender === 'Male' ? '' : gender === 'Female' ? '' : '👤'
   }
 
   const getGenderColor = (gender) => {
-    return gender === 'Male' ? 'text-primary' : gender === 'Female' ? 'text-pink' : 'text-secondary'
+    return gender === 'Male' ? '' : gender === 'Female' ? '' : ''
   }
 
   return (
     <>
       <tr className="align-middle">
-        <td className="fw-semibold text-primary">#{safeId}</td>
+        <td className="fw-semibold">{safeId}</td>
         <td>
           <div className="d-flex align-items-center">
-            <div className="bg-light rounded-circle d-flex align-items-center justify-content-center me-3" 
-                 style={{width: '40px', height: '40px'}}>
-              <span className="text-muted">{getGenderIcon(safeGender)}</span>
-            </div>
             <div>
               <div className="fw-semibold">{safeName}</div>
               <small className="text-muted">{safePhoneNo}</small>
@@ -94,7 +90,7 @@ function Student({id, name, age, gender, phoneNo, emailId, batch, refresh}) {
               data-bs-target={`#exampleModal1${safeId}`}
               title="Update Student"
             >
-              ✏️
+              Edit
           </button>
           </div>
         </td>

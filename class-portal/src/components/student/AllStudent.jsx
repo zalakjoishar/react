@@ -4,7 +4,9 @@ import Student from './Student'
 
 function AllStudent() {
   const [student, SetStudent] = useState(null)
+  const [filteredStudents, setFilteredStudents] = useState(null)
   const [loading, setLoading] = useState(true)
+  const [searchTerm, setSearchTerm] = useState('')
   const navigate = useNavigate()
   
   const fetchStudent = () => {
@@ -37,10 +39,12 @@ function AllStudent() {
         
         if (data && data["_embedded"] && data["_embedded"]["students"]) {
           SetStudent(data["_embedded"]["students"])
+          setFilteredStudents(data["_embedded"]["students"])
           console.log('Students loaded:', data["_embedded"]["students"])
         } else {
           console.log('No students found or unexpected data structure:', data)
           SetStudent([])
+          setFilteredStudents([])
         }
         setLoading(false)
       })
@@ -54,8 +58,34 @@ function AllStudent() {
         }
         
         SetStudent([])
+        setFilteredStudents([])
         setLoading(false)
       })
+  }
+
+  // Search functionality
+  const handleSearch = (e) => {
+    const searchValue = e.target.value.toLowerCase()
+    setSearchTerm(searchValue)
+    
+    if (!student) return
+    
+    if (searchValue === '') {
+      setFilteredStudents(student)
+    } else {
+      const filtered = student.filter(s => {
+        const studentId = s.id ? s.id.toString() : ''
+        const studentName = s.name ? s.name.toLowerCase() : ''
+        
+        return studentId.includes(searchValue) || studentName.includes(searchValue)
+      })
+      setFilteredStudents(filtered)
+    }
+  }
+
+  const clearSearch = () => {
+    setSearchTerm('')
+    setFilteredStudents(student)
   }
   
   useEffect(() => {
@@ -71,12 +101,44 @@ function AllStudent() {
               <h4 className="mb-0">👥 All Students</h4>
               <small className="text-muted">Manage student information and records</small>
             </div>
-            <div className="d-flex gap-2">
+            <div className="d-flex gap-2 align-items-center">
+              {/* Search Bar */}
+              <div className="d-flex align-items-center">
+                <div className="input-group search-input-group compact">
+                  <span className="input-group-text">
+                    <i className="bi bi-search text-muted"></i>
+                  </span>
+                  <input 
+                    type="text" 
+                    className="form-control" 
+                    placeholder="Search by ID or Name..." 
+                    value={searchTerm}
+                    onChange={handleSearch}
+                  />
+                  {searchTerm && (
+                    <button 
+                      className="btn btn-outline-secondary" 
+                      type="button"
+                      onClick={clearSearch}
+                      title="Clear search"
+                    >
+                      ✕
+                    </button>
+                  )}
+                </div>
+                {searchTerm && (
+                  <div className="search-results-count ms-2">
+                    <span className="me-1">🔍</span>
+                    <small>{filteredStudents ? filteredStudents.length : 0}</small>
+                  </div>
+                )}
+              </div>
               <button className="btn btn-primary btn-sm" onClick={() => navigate('/add-student')}>
                 <span className="me-2">➕</span>Add Student
               </button>
             </div>
           </div>
+
           <div className="card-body p-0">
             {loading ? (
               <div className="text-center py-5">
@@ -93,7 +155,7 @@ function AllStudent() {
                   Retry
                 </button>
               </div>
-            ) : student && student.length > 0 ? (
+            ) : filteredStudents && filteredStudents.length > 0 ? (
               <div className="table-responsive">
                 <table className="table table-hover mb-0">
                   <thead>
@@ -108,7 +170,7 @@ function AllStudent() {
                     </tr>
                   </thead>
                   <tbody>
-                    {student.map((s, i) => (
+                    {filteredStudents.map((s, i) => (
                       <Student 
                         key={i}
                         id={s.id}
@@ -123,6 +185,15 @@ function AllStudent() {
                     ))}
                   </tbody>
                 </table>
+              </div>
+            ) : searchTerm ? (
+              <div className="text-center search-no-results">
+                <div className="text-muted mb-3" style={{fontSize: '3rem'}}>🔍</div>
+                <h5 className="text-muted">No students found</h5>
+                <p className="text-muted">No students match your search criteria</p>
+                <button className="btn btn-outline-primary" onClick={clearSearch}>
+                  Clear Search
+                </button>
               </div>
             ) : (
               <div className="text-center py-5">

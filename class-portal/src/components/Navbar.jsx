@@ -1,93 +1,134 @@
 import React from 'react'
-import { Link, useLocation } from 'react-router-dom'
+import { useLocation, useNavigate } from 'react-router-dom'
 
 function Navbar() {
-  const location = useLocation();
-  
-  const navItems = [
-    { path: "/student", label: "Students", icon: "👥" },
-    { path: "/add-student", label: "Add Student", icon: "➕" },
-    { path: "/batch", label: "Batches", icon: "📚" },
-    { path: "/add-batch", label: "Add Batch", icon: "➕" },
-    { path: "/add-classRoom", label: "Add Classroom", icon: "🏫" },
-    { path: "/add-event", label: "Add Event", icon: "📅" },
-    { path: "/add-coordinator", label: "Add Coordinator", icon: "👨‍💼" },
-    { path: "/add-trainer", label: "Add Trainer", icon: "👨‍🏫" },
-    { path: "/add-slot", label: "Add Slot", icon: "⏰" }
-  ];
+  const location = useLocation()
+  const navigate = useNavigate()
+
+  // Generate breadcrumb from current path
+  const generateBreadcrumb = () => {
+    const pathSegments = location.pathname.split('/').filter(segment => segment !== '')
+    
+    if (pathSegments.length === 0) {
+      return [{ label: 'Dashboard', path: '/' }]
+    }
+
+    const breadcrumb = []
+    let currentPath = ''
+
+    pathSegments.forEach((segment, index) => {
+      currentPath += `/${segment}`
+      
+      // Convert path segment to readable label
+      let label = segment
+        .split('-')
+        .map(word => word.charAt(0).toUpperCase() + word.slice(1))
+        .join(' ')
+
+      // Special cases for better readability
+      if (segment === 'student') label = 'Students'
+      if (segment === 'batch') label = 'Batches'
+      if (segment === 'classRoom') label = 'Classroom'
+      if (segment === 'coordinator') label = 'Coordinator'
+      if (segment === 'trainer') label = 'Trainer'
+      if (segment === 'event') label = 'Event'
+      if (segment === 'slot') label = 'Slot'
+
+      breadcrumb.push({
+        label,
+        path: currentPath,
+        isLast: index === pathSegments.length - 1
+      })
+    })
+
+    return breadcrumb
+  }
+
+  const breadcrumb = generateBreadcrumb()
 
   return (
-    <nav className="navbar navbar-expand-lg navbar-light bg-white shadow-sm border-bottom">
+    <nav className="navbar navbar-expand-lg navbar-light border-bottom shadow-sm" style={{backgroundColor: '#f8fafc'}}>
       <div className="container-fluid">
-        <Link className="navbar-brand d-flex align-items-center" to="/">
-          <div className="bg-primary text-white rounded-circle d-flex align-items-center justify-content-center me-2" 
-               style={{width: '40px', height: '40px', fontSize: '18px'}}>
-            🎓
-          </div>
-    <div>
-            <div className="fw-bold text-primary mb-0">Class Portal</div>
-            <small className="text-muted">Education Management</small>
-          </div>
-        </Link>
-        
-        <button className="navbar-toggler border-0" type="button" data-bs-toggle="collapse" 
-                data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" 
-                aria-expanded="false" aria-label="Toggle navigation">
-            <span className="navbar-toggler-icon"></span>
-          </button>
-        
-          <div className="collapse navbar-collapse" id="navbarSupportedContent">
-            <ul className="navbar-nav me-auto mb-2 mb-lg-0">
-            {navItems.map((item, index) => (
-              <li className="nav-item" key={index}>
-                <Link 
-                  className={`nav-link d-flex align-items-center px-3 py-2 rounded-pill mx-1 ${
-                    location.pathname === item.path ? 'active bg-primary text-white' : 'text-dark'
-                  }`}
-                  to={item.path}
-                  style={{
-                    transition: 'all 0.2s ease',
-                    fontWeight: location.pathname === item.path ? '600' : '500'
-                  }}
-                >
-                  <span className="me-2">{item.icon}</span>
-                  {item.label}
-                </Link>
+        {/* Breadcrumb */}
+        <div className="navbar-nav me-auto">
+          <nav aria-label="breadcrumb">
+            <ol className="breadcrumb mb-0">
+              {breadcrumb.map((item, index) => (
+                <li key={index} className="breadcrumb-item">
+                  {item.isLast ? (
+                    <span style={{color: '#475569'}}>{item.label}</span>
+                  ) : (
+                    <button 
+                      className="btn btn-link p-0 text-decoration-none"
+                      onClick={() => navigate(item.path)}
+                      style={{ 
+                        color: '#64748b',
+                        fontSize: '0.875rem',
+                        fontWeight: '500'
+                      }}
+                    >
+                      {item.label}
+                    </button>
+                  )}
+                </li>
+              ))}
+            </ol>
+          </nav>
+        </div>
+
+        {/* Admin Dropdown */}
+        <div className="navbar-nav">
+          <div className="nav-item dropdown">
+            <button 
+              className="btn btn-outline-primary dropdown-toggle d-flex align-items-center" 
+              type="button" 
+              data-bs-toggle="dropdown" 
+              aria-expanded="false"
+              style={{
+                borderRadius: '8px',
+                padding: '0.75rem 1.25rem',
+                fontSize: '0.875rem',
+                fontWeight: '500',
+                backgroundColor: 'white',
+                borderColor: '#e2e8f0',
+                color: '#475569',
+                borderWidth: '1px'
+              }}
+            >
+              <span className="me-2">👤</span>
+              Admin
+            </button>
+            <ul className="dropdown-menu dropdown-menu-end shadow border-0">
+              <li>
+                <a className="dropdown-item d-flex align-items-center" href="#">
+                  <span className="me-2">⚙️</span>
+                  Settings
+                </a>
               </li>
-            ))}
-          </ul>
-          
-          <div className="d-flex align-items-center">
-            <div className="input-group me-3" style={{maxWidth: '300px'}}>
-              <span className="input-group-text bg-light border-end-0">
-                <i className="bi bi-search text-muted"></i>
-              </span>
-              <input 
-                className="form-control border-start-0" 
-                type="search" 
-                placeholder="Search students, batches..." 
-                aria-label="Search"
-                style={{boxShadow: 'none'}}
-              />
-            </div>
-            
-            <div className="dropdown">
-              <button className="btn btn-outline-primary rounded-pill px-3" type="button" 
-                      data-bs-toggle="dropdown" aria-expanded="false">
-                <span className="me-2">👤</span>
-                Admin
-              </button>
-              <ul className="dropdown-menu dropdown-menu-end shadow border-0">
-                <li><a className="dropdown-item" href="#"><span className="me-2">⚙️</span>Settings</a></li>
-                <li><a className="dropdown-item" href="#"><span className="me-2">📊</span>Reports</a></li>
-                <li><hr className="dropdown-divider"/></li>
-                <li><a className="dropdown-item text-danger" href="#"><span className="me-2">🚪</span>Logout</a></li>
+              <li>
+                <a className="dropdown-item d-flex align-items-center" href="#">
+                  <span className="me-2">📊</span>
+                  Reports
+                </a>
+              </li>
+              <li>
+                <a className="dropdown-item d-flex align-items-center" href="#">
+                  <span className="me-2">👥</span>
+                  Users
+                </a>
+              </li>
+              <li><hr className="dropdown-divider"/></li>
+              <li>
+                <a className="dropdown-item d-flex align-items-center text-danger" href="#">
+                  <span className="me-2">🚪</span>
+                  Logout
+                </a>
+              </li>
             </ul>
-            </div>
-          </div>
           </div>
         </div>
-      </nav>
+      </div>
+    </nav>
   )
 }
 

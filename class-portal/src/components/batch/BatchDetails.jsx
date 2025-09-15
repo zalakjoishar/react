@@ -183,13 +183,13 @@ function BatchDetails() {
                 className="btn btn-outline-primary"
                 onClick={() => setShowEditForm(!showEditForm)}
               >
-                ✏️ Edit Batch
+                Edit Batch
               </button>
               <button 
                 className="btn btn-outline-danger"
                 onClick={deleteBatch}
               >
-                🗑️ Delete
+                Delete
               </button>
             </div>
           </div>
@@ -202,14 +202,14 @@ function BatchDetails() {
           <div className="col-12">
             <div className="card">
               <div className="card-header">
-                <h5 className="mb-0">✏️ Edit Batch Information</h5>
+                <h5 className="mb-0">Edit Batch Information</h5>
               </div>
               <div className="card-body">
                 <form onSubmit={handleSubmit(onSubmit)}>
                   <div className="row">
                     <div className="col-md-4 mb-3">
                       <label htmlFor="batchName" className="form-label">
-                        <span className="me-2">📚</span>Batch Name
+                        <span className="me-2"></span>Batch Name
                       </label>
                       <input 
                         type="text" 
@@ -223,7 +223,7 @@ function BatchDetails() {
                     
                     <div className="col-md-4 mb-3">
                       <label htmlFor="certification" className="form-label">
-                        <span className="me-2">🏆</span>Certification
+                        <span className="me-2"></span>Certification
                       </label>
                       <input 
                         type="text" 
@@ -237,7 +237,7 @@ function BatchDetails() {
                     
                     <div className="col-md-4 mb-3">
                       <label htmlFor="genre" className="form-label">
-                        <span className="me-2">📖</span>Genre
+                        <span className="me-2"></span>Genre
                       </label>
                       <input 
                         type="text" 
@@ -252,14 +252,14 @@ function BatchDetails() {
                   
                   <div className="d-flex gap-2">
                     <button type="submit" className="btn btn-primary">
-                      <span className="me-2">💾</span> Save Changes
+                      <span className="me-2"></span> Save Changes
                     </button>
                     <button 
                       type="button" 
                       className="btn btn-outline-secondary"
                       onClick={() => setShowEditForm(false)}
                     >
-                      <span className="me-2">✕</span> Cancel
+                      <span className="me-2"></span> Cancel
                     </button>
                   </div>
                 </form>
@@ -315,7 +315,7 @@ function BatchDetails() {
             <div className="card-body">
               <div className="bg-warning bg-opacity-10 rounded-circle d-inline-flex align-items-center justify-content-center mb-3" 
                    style={{width: '60px', height: '60px'}}>
-                <span className="text-warning fs-4"></span>
+                <span className="text-warning fs-4">👨‍🏫</span>
               </div>
               <h4 className="mb-1">{trainer && trainer.name ? '1' : '0'}</h4>
               <p className="text-muted mb-0">Trainer</p>
@@ -342,7 +342,7 @@ function BatchDetails() {
         <div className="col-md-6">
           <div className="card">
             <div className="card-header">
-              <h5 className="mb-0">Batch Information</h5>
+              <h5 className="mb-0">📋 Batch Information</h5>
             </div>
             <div className="card-body">
               <div className="row">
@@ -366,6 +366,7 @@ function BatchDetails() {
                 </div>
                 <div className="col-sm-6 mb-3">
                   <div className="d-flex align-items-center">
+                    <span className="me-3 text-primary">👨‍🏫</span>
                     <div>
                       <small className="text-muted">Trainer</small>
                       <div className="fw-semibold">
@@ -376,6 +377,7 @@ function BatchDetails() {
                 </div>
                 <div className="col-sm-6 mb-3">
                   <div className="d-flex align-items-center">
+                    <span className="me-3 text-primary">👨‍💼</span>
                     <div>
                       <small className="text-muted">Coordinator</small>
                       <div className="fw-semibold">
@@ -386,6 +388,7 @@ function BatchDetails() {
                 </div>
                 <div className="col-sm-6 mb-3">
                   <div className="d-flex align-items-center">
+                    <span className="me-3 text-primary">🏫</span>
                     <div>
                       <small className="text-muted">Classroom</small>
                       <div className="fw-semibold">
@@ -402,7 +405,7 @@ function BatchDetails() {
         <div className="col-md-6">
           <div className="card">
             <div className="card-header">
-              <h5 className="mb-0">📊 Quick Actions</h5>
+              <h5 className="mb-0"> Quick Actions</h5>
             </div>
             <div className="card-body">
               <div className="d-grid gap-2">
@@ -475,12 +478,12 @@ function BatchDetails() {
                           <td className="fw-semibold text-primary">#{student.id}</td>
                           <td>
                             <div className="d-flex align-items-center">
-                              <div className="bg-light rounded-circle d-flex align-items-center justify-content-center me-3" 
+                              {/* <div className="bg-light rounded-circle d-flex align-items-center justify-content-center me-3" 
                                    style={{width: '40px', height: '40px'}}>
                                 <span className="text-muted">
                                   {student.gender === 'Male' ? '👨' : student.gender === 'Female' ? '👩' : '👤'}
                                 </span>
-                              </div>
+                              </div> */}
                               <div>
                                 <div className="fw-semibold">{student.name}</div>
                                 <small className="text-muted">{student.phoneNo}</small>
@@ -492,7 +495,7 @@ function BatchDetails() {
                           </td>
                           <td>
                             <span className="fw-medium">
-                              {student.gender === 'Male' ? '👨' : student.gender === 'Female' ? '👩' : '👤'} {student.gender}
+                              {student.gender}
                             </span>
                           </td>
                           <td>
@@ -504,13 +507,13 @@ function BatchDetails() {
                                 className="btn btn-outline-primary btn-sm"
                                 onClick={() => toast.info(`Viewing student: ${student.name}`)}
                               >
-                                👁️ View
+                                View
                               </button>
                               <button 
                                 className="btn btn-outline-success btn-sm"
                                 onClick={() => toast.info(`Editing student: ${student.name}`)}
                               >
-                                ✏️ Edit
+                                Edit
                               </button>
                             </div>
                           </td>

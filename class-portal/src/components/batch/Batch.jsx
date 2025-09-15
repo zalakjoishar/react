@@ -4,7 +4,9 @@ import ShowBatches from './ShowBatches'
 
 function Batch() {
   const [batch, setBatch] = useState(null)
+  const [filteredBatches, setFilteredBatches] = useState(null)
   const [loading, setLoading] = useState(true)
+  const [searchTerm, setSearchTerm] = useState('')
   const navigate = useNavigate()
   
   const fetchBatch = () => {
@@ -12,13 +14,45 @@ function Batch() {
     fetch(`http://localhost:8080/batch`)
       .then(res => res.json())
       .then(data => {
-        setBatch(data["_embedded"]["batches"])
+        const batches = data["_embedded"]["batches"]
+        setBatch(batches)
+        setFilteredBatches(batches)
         setLoading(false)
       })
       .catch(error => {
         console.error('Error fetching batches:', error)
         setLoading(false)
       })
+  }
+
+  // Search functionality
+  const handleSearch = (e) => {
+    const searchValue = e.target.value.toLowerCase()
+    setSearchTerm(searchValue)
+    
+    if (!batch) return
+    
+    if (searchValue === '') {
+      setFilteredBatches(batch)
+    } else {
+      const filtered = batch.filter(b => {
+        const batchId = b.id ? b.id.toString() : ''
+        const batchName = b.name ? b.name.toLowerCase() : ''
+        const batchCertification = b.certification ? b.certification.toLowerCase() : ''
+        const batchGenre = b.genre ? b.genre.toLowerCase() : ''
+        
+        return batchId.includes(searchValue) || 
+               batchName.includes(searchValue) || 
+               batchCertification.includes(searchValue) || 
+               batchGenre.includes(searchValue)
+      })
+      setFilteredBatches(filtered)
+    }
+  }
+
+  const clearSearch = () => {
+    setSearchTerm('')
+    setFilteredBatches(batch)
   }
   
   useEffect(() => {
@@ -34,7 +68,38 @@ function Batch() {
               <h4 className="mb-0">📚 All Batches</h4>
               <small className="text-muted">Manage batch information and student assignments</small>
             </div>
-            <div className="d-flex gap-2">
+            <div className="d-flex gap-2 align-items-center">
+              {/* Search Bar */}
+              <div className="d-flex align-items-center">
+                <div className="input-group search-input-group compact">
+                  <span className="input-group-text">
+                    <i className="bi bi-search text-muted"></i>
+                  </span>
+                  <input 
+                    type="text" 
+                    className="form-control" 
+                    placeholder="Search by ID, Name, Certification, or Genre..." 
+                    value={searchTerm}
+                    onChange={handleSearch}
+                  />
+                  {searchTerm && (
+                    <button 
+                      className="btn btn-outline-secondary" 
+                      type="button"
+                      onClick={clearSearch}
+                      title="Clear search"
+                    >
+                      ✕
+                    </button>
+                  )}
+                </div>
+                {searchTerm && (
+                  <div className="search-results-count ms-2">
+                    <span className="me-1">🔍</span>
+                    <small>{filteredBatches ? filteredBatches.length : 0}</small>
+                  </div>
+                )}
+              </div>
               <button className="btn btn-primary btn-sm" onClick={() => navigate('/add-batch')}>
                 <span className="me-2">➕</span>Add Batch
               </button>
@@ -46,9 +111,9 @@ function Batch() {
                 <div className="loading-spinner"></div>
                 <p className="text-muted mt-3">Loading batches...</p>
               </div>
-            ) : batch && batch.length > 0 ? (
+            ) : filteredBatches && filteredBatches.length > 0 ? (
               <div className="accordion" id="batchAccordion">
-                {batch.map((b, i) => (
+                {filteredBatches.map((b, i) => (
                   <ShowBatches
                     key={i}
                     id={b.id}
@@ -61,6 +126,15 @@ function Batch() {
                     index={i}
                   />
                 ))}
+              </div>
+            ) : searchTerm ? (
+              <div className="text-center search-no-results">
+                <div className="text-muted mb-3" style={{fontSize: '3rem'}}>🔍</div>
+                <h5 className="text-muted">No batches found</h5>
+                <p className="text-muted">No batches match your search criteria</p>
+                <button className="btn btn-outline-primary" onClick={clearSearch}>
+                  Clear Search
+                </button>
               </div>
             ) : (
               <div className="text-center py-5">
