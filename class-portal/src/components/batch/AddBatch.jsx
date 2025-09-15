@@ -2,122 +2,286 @@ import React, { useEffect, useState } from 'react'
 import { useForm } from 'react-hook-form'
 import { toast, ToastContainer } from 'react-toastify'
 
-function Batch() {
-  const{
+function AddBatch() {
+  const {
     handleSubmit,
     register,
-    formState:{errors},
+    formState: { errors },
     reset
-  }=useForm()
-  const onSubmit=(data)=>{
+  } = useForm()
+  
+  const [cla, setCla] = useState(null)
+  const [tra, setTra] = useState(null)
+  const [cor, setCor] = useState(null)
+  const [loading, setLoading] = useState(false)
+  
+  const onSubmit = (data) => {
+    setLoading(true)
     console.log(data)
-    fetch("http://localhost:8080/batch",{
-      method:"POST",
-      headers:{
-        "Content-Type":"application/json"
+    fetch("http://localhost:8080/batch", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json"
       },
-      body:JSON.stringify({
-        id:data.id,
-        name:data.name,
-        certification:data.certification,
-        genre:data.genre
+      body: JSON.stringify({
+        id: data.id,
+        name: data.name,
+        certification: data.certification,
+        genre: data.genre
       })
-    }).then(res=>res.json())
-    .then(res=>{
-        fetch(`http://localhost:8080/batch/${data.id}/classRoom`,{
-        method:"PUT",
-        headers:{
-          "Content-Type":"text/uri-list"
+    })
+    .then(res => res.json())
+    .then(res => {
+      console.log("Response", res);
+      
+      // Link to classroom
+      fetch(`http://localhost:8080/batch/${data.id}/classRoom`, {
+        method: "PUT",
+        headers: {
+          "Content-Type": "text/uri-list"
         },
-        body:data.classRoom
-      }).then(res=>{
-        console.log(res)
-        fetch(`http://localhost:8080/batch/${data.id}/trainer`,{
-          method:"PUT",
-          headers:{
-            "Content-Type":"text/uri-list"
+        body: data.classRoom
+      })
+      .then(res => res.text())
+      .then(res => {
+        console.log('Classroom linked:', res)
+        
+        // Link to trainer
+        fetch(`http://localhost:8080/batch/${data.id}/trainer`, {
+          method: "PUT",
+          headers: {
+            "Content-Type": "text/uri-list"
           },
-        body:data.trainer
-      }).then(res=>{
-        console.log(res)
-        fetch(`http://localhost:8080/batch/${data.id}/coordinator`,{
-          method:"PUT",
-          headers:{
-              "Content-Type":"text/uri-list"
-          },
-          body:data.coordinator
-        }).then(res=>{console.log(res)})      
+          body: data.trainer
+        })
+        .then(res => res.text())
+        .then(res => {
+          console.log('Trainer linked:', res)
+          
+          // Link to coordinator
+          fetch(`http://localhost:8080/batch/${data.id}/coordinator`, {
+            method: "PUT",
+            headers: {
+              "Content-Type": "text/uri-list"
+            },
+            body: data.coordinator
+          })
+          .then(res => res.text())
+          .then(res => {
+            console.log('Coordinator linked:', res)
+            toast.success(`${data.name} added successfully! 🎉`)
+            reset()
+            setLoading(false)
+          })
+          .catch(error => {
+            console.error('Coordinator linking error:', error)
+            toast.error("Failed to link coordinator")
+            setLoading(false)
+          })
+        })
+        .catch(error => {
+          console.error('Trainer linking error:', error)
+          toast.error("Failed to link trainer")
+          setLoading(false)
+        })
+      })
+      .catch(error => {
+        console.error('Classroom linking error:', error)
+        toast.error("Failed to link classroom")
+        setLoading(false)
       })
     })
-    toast.success(`${data.name} added`)
-    reset()
+    .catch(error => {
+      toast.error("Failed to add batch")
+      setLoading(false)
     })
-    .catch(error=>toast.error("failed to add product"))
   }
   
-  const [cla,setCla]=useState(null)
-  const fetchCla=()=>{
-      fetch("http://localhost:8080/classRoom").then(res=>res.json()).then(data=>setCla(data["_embedded"]["classRooms"]))
+  const fetchCla = () => {
+    fetch("http://localhost:8080/classRoom")
+      .then(res => res.json())
+      .then(data => setCla(data["_embedded"]["classRooms"]))
   }
-  const [tra,setTra]=useState(null)
-  const fetchTra=()=>{
-      fetch("http://localhost:8080/trainer").then(res=>res.json()).then(data=>setTra(data["_embedded"]["trainers"]))
+  
+  const fetchTra = () => {
+    fetch("http://localhost:8080/trainer")
+      .then(res => res.json())
+      .then(data => setTra(data["_embedded"]["trainers"]))
   }
-  const [cor,setCor]=useState(null)
-  const fetchCor=()=>{
-      fetch("http://localhost:8080/coordinator").then(res=>res.json()).then(data=>setCor(data["_embedded"]["coordinators"]))
+  
+  const fetchCor = () => {
+    fetch("http://localhost:8080/coordinator")
+      .then(res => res.json())
+      .then(data => setCor(data["_embedded"]["coordinators"]))
   }
-  useEffect(()=>{
-      fetchCla()
-      fetchCor()
-      fetchTra()
-  },[])
+  
+  useEffect(() => {
+    fetchCla()
+    fetchCor()
+    fetchTra()
+  }, [])
+
   return (
-    <div>
-      <form className='container m-3 p-4 border border-secondary' onSubmit={handleSubmit(onSubmit)}>
-        <div className="mb-3">
-          <label htmlFor="exampleInputEmail1" className="form-label">Enter id</label>
-          <input type="number" className="form-control" id="exampleInputEmail1" aria-describedby="emailHelp" {...register("id",{required:"id is required"})}/>
-          {errors.id && <div id='emailHelp' className='form-text'>{errors.id.message}</div>}
+    <div className="row justify-content-center">
+      <div className="col-lg-8 col-xl-6">
+        <div className="card">
+          <div className="card-header text-center">
+            <h4 className="mb-0">📚 Add New Batch</h4>
+            <small className="text-muted">Fill in the batch information below</small>
+          </div>
+          <div className="card-body">
+            <form onSubmit={handleSubmit(onSubmit)}>
+              <div className="row">
+                <div className="col-md-6 mb-3">
+                  <label htmlFor="batchId" className="form-label">
+                    <span className="me-2">🆔</span>Batch ID
+                  </label>
+                  <input 
+                    type="number" 
+                    className={`form-control ${errors.id ? 'is-invalid' : ''}`}
+                    id="batchId"
+                    placeholder="Enter batch ID"
+                    {...register("id", { required: "Batch ID is required" })}
+                  />
+                  {errors.id && <div className="invalid-feedback">{errors.id.message}</div>}
+                </div>
+                
+                <div className="col-md-6 mb-3">
+                  <label htmlFor="batchName" className="form-label">
+                    <span className="me-2">📚</span>Batch Name
+                  </label>
+                  <input 
+                    type="text" 
+                    className={`form-control ${errors.name ? 'is-invalid' : ''}`}
+                    id="batchName"
+                    placeholder="Enter batch name"
+                    {...register("name", { required: "Batch name is required" })}
+                  />
+                  {errors.name && <div className="invalid-feedback">{errors.name.message}</div>}
+                </div>
+              </div>
+
+              <div className="row">
+                <div className="col-md-6 mb-3">
+                  <label htmlFor="certification" className="form-label">
+                    <span className="me-2">🏆</span>Certification
+                  </label>
+                  <input 
+                    type="text" 
+                    className={`form-control ${errors.certification ? 'is-invalid' : ''}`}
+                    id="certification"
+                    placeholder="Enter certification"
+                    {...register("certification", { required: "Certification is required" })}
+                  />
+                  {errors.certification && <div className="invalid-feedback">{errors.certification.message}</div>}
+                </div>
+                
+                <div className="col-md-6 mb-3">
+                  <label htmlFor="genre" className="form-label">
+                    <span className="me-2">📖</span>Genre
+                  </label>
+                  <input 
+                    type="text" 
+                    className={`form-control ${errors.genre ? 'is-invalid' : ''}`}
+                    id="genre"
+                    placeholder="Enter genre"
+                    {...register("genre", { required: "Genre is required" })}
+                  />
+                  {errors.genre && <div className="invalid-feedback">{errors.genre.message}</div>}
+                </div>
+              </div>
+
+              <div className="row">
+                <div className="col-md-4 mb-3">
+                  <label htmlFor="classroomSelect" className="form-label">
+                    <span className="me-2">🏫</span>Select Classroom
+                  </label>
+                  <select 
+                    className={`form-select ${errors.classRoom ? 'is-invalid' : ''}`}
+                    id="classroomSelect"
+                    {...register("classRoom", { required: "Classroom selection is required" })}
+                  >
+                    <option value="">Choose a classroom...</option>
+                    {cla && cla.map((c, i) => (
+                      <option value={c._links.self.href} key={i}>
+                        {c.name}
+                      </option>
+                    ))}
+                  </select>
+                  {errors.classRoom && <div className="invalid-feedback">{errors.classRoom.message}</div>}
+                </div>
+                
+                <div className="col-md-4 mb-3">
+                  <label htmlFor="trainerSelect" className="form-label">
+                    <span className="me-2">👨‍🏫</span>Select Trainer
+                  </label>
+                  <select 
+                    className={`form-select ${errors.trainer ? 'is-invalid' : ''}`}
+                    id="trainerSelect"
+                    {...register("trainer", { required: "Trainer selection is required" })}
+                  >
+                    <option value="">Choose a trainer...</option>
+                    {tra && tra.map((c, i) => (
+                      <option value={c._links.self.href} key={i}>
+                        {c.name}
+                      </option>
+                    ))}
+                  </select>
+                  {errors.trainer && <div className="invalid-feedback">{errors.trainer.message}</div>}
+                </div>
+                
+                <div className="col-md-4 mb-3">
+                  <label htmlFor="coordinatorSelect" className="form-label">
+                    <span className="me-2">👨‍💼</span>Select Coordinator
+                  </label>
+                  <select 
+                    className={`form-select ${errors.coordinator ? 'is-invalid' : ''}`}
+                    id="coordinatorSelect"
+                    {...register("coordinator", { required: "Coordinator selection is required" })}
+                  >
+                    <option value="">Choose a coordinator...</option>
+                    {cor && cor.map((c, i) => (
+                      <option value={c._links.self.href} key={i}>
+                        {c.name}
+                      </option>
+                    ))}
+                  </select>
+                  {errors.coordinator && <div className="invalid-feedback">{errors.coordinator.message}</div>}
+                </div>
+              </div>
+
+              <div className="d-grid gap-2 d-md-flex justify-content-md-end">
+                <button 
+                  type="button" 
+                  className="btn btn-outline-secondary me-md-2"
+                  onClick={() => reset()}
+                >
+                  <span className="me-2">🔄</span> Reset
+                </button>
+                <button 
+                  type="submit" 
+                  className="btn btn-primary"
+                  disabled={loading}
+                >
+                  {loading ? (
+                    <>
+                      <span className="loading-spinner me-2"></span>
+                      Adding...
+                    </>
+                  ) : (
+                    <>
+                      <span className="me-2">📚</span> Add Batch
+                    </>
+                  )}
+                </button>
+              </div>
+            </form>
+          </div>
         </div>
-        <div className="mb-3">
-          <label htmlFor="exampleInputEmail1" className="form-label">Enter name</label>
-          <input type="text" className="form-control" id="exampleInputEmail1" aria-describedby="emailHelp" {...register("name",{required:"name is required"})}/>
-          {errors.name && <div id='emailHelp' className='form-text'>{errors.name.message}</div>}
-        </div>
-        <div className="mb-3">
-          <label htmlFor="exampleInputEmail1" className="form-label">Enter certification</label>
-          <input type="text" className="form-control" id="exampleInputEmail1" aria-describedby="emailHelp" {...register("certification",{required:"certification is required"})}/>
-          {errors.certification && <div id='emailHelp' className='form-text'>{errors.certification.message}</div>}
-        </div>
-        <div className="mb-3">
-          <label htmlFor="exampleInputEmail1" className="form-label">Enter genre</label>
-          <input type="text" className="form-control" id="exampleInputEmail1" aria-describedby="emailHelp" {...register("genre",{required:"certification is required"})}/>
-          {errors.genre && <div id='emailHelp' className='form-text'>{errors.genre.message}</div>}
-        </div>
-        <div className='mb-3'>
-          <select className="form-select" aria-label="Default select example" {...register("classRoom",{required:"classRoom is required"})}>
-            <option defaultValue={true}>select classRoom</option>
-            {cla && cla .map((c,i)=><option value={c._links.self.href} key={i}>{c.name}</option>)}
-          </select>
-        </div>
-        <div className='mb-3'>
-          <select className="form-select" aria-label="Default select example" {...register("trainer",{required:"trainer is required"})}>
-            <option defaultValue={true}>select trainer</option>
-            {tra && tra .map((c,i)=><option value={c._links.self.href} key={i}>{c.name}</option>)}
-          </select>
-        </div>
-        <div className='mb-3'>
-          <select className="form-select" aria-label="Default select example" {...register("coordinator",{required:"coordinator is required"})}>
-            <option defaultValue={true}>select coordinator</option>
-            {cor && cor .map((c,i)=><option value={c._links.self.href} key={i}>{c.name}</option>)}
-          </select>
-        </div>
-        <button type="submit" className="btn btn-primary">Sign in</button>
-      </form>
-    <ToastContainer/>
+      </div>
+      <ToastContainer />
     </div>
   )
 }
 
-export default Batch
+export default AddBatch

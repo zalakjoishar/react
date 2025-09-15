@@ -1,0 +1,171 @@
+/* PURE MODAL STYLES - NO BOOTSTRAP CONFLICTS */
+
+/* SIMPLE MODAL STYLES - NO AUTO-OPENING */
+.modal {
+  display: none !important;
+}
+
+.modal.show {
+  display: block !important;
+}
+
+/* Force hide any modal that might try to auto-open */
+.modal[aria-hidden="true"] {
+  display: none !important;
+}
+
+/* Prevent any modal from being visible unless explicitly shown */
+.modal:not(.show) {
+  display: none !important;
+}
+
+/* Reset any possible modal conflicts */
+.modal,
+.modal *,
+.modal-content,
+.modal-content *,
+.modal-header,
+.modal-header *,
+.modal-body,
+.modal-body *,
+.modal-footer,
+.modal-footer *,
+.modal-dialog,
+.modal-dialog *,
+.modal-backdrop,
+.modal-backdrop * {
+  transition: none !important;
+  animation: none !important;
+  transform: none !important;
+  opacity: 1 !important;
+  will-change: auto !important;
+  backface-visibility: visible !important;
+  perspective: none !important;
+}
+
+/* Disable all hover effects that could cause blinking */
+.modal:hover,
+.modal:hover *,
+.modal-content:hover,
+.modal-content:hover *,
+.modal-header:hover,
+.modal-header:hover *,
+.modal-body:hover,
+.modal-body:hover *,
+.modal-footer:hover,
+.modal-footer:hover *,
+.modal-dialog:hover,
+.modal-dialog:hover * {
+  transition: none !important;
+  animation: none !important;
+  transform: none !important;
+  opacity: 1 !important;
+  will-change: auto !important;
+  backface-visibility: visible !important;
+  perspective: none !important;
+}
+
+/* Force stable positioning */
+.modal {
+  position: fixed !important;
+  top: 0 !important;
+  left: 0 !important;
+  width: 100vw !important;
+  height: 100vh !important;
+  z-index: 9999 !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  margin: 0 !important;
+  padding: 0 !important;
+}
+
+.modal.show {
+  display: flex !important;
+  opacity: 1 !important;
+}
+
+.modal.fade {
+  transition: none !important;
+  opacity: 1 !important;
+}
+
+/* Disable backdrop animations */
+.modal-backdrop {
+  position: fixed !important;
+  top: 0 !important;
+  left: 0 !important;
+  z-index: 9998 !important;
+  width: 100vw !important;
+  height: 100vh !important;
+  background-color: rgba(0, 0, 0, 0.5) !important;
+  opacity: 0.5 !important;
+  transition: none !important;
+  animation: none !important;
+  transform: none !important;
+}
+
+.modal-backdrop.fade {
+  opacity: 0.5 !important;
+  transition: none !important;
+}
+
+.modal-backdrop.show {
+  opacity: 0.5 !important;
+}
+
+/* Disable all pseudo-elements */
+.modal::before,
+.modal::after,
+.modal-content::before,
+.modal-content::after,
+.modal-header::before,
+.modal-header::after,
+.modal-body::before,
+.modal-body::after,
+.modal-footer::before,
+.modal-footer::after,
+.modal-dialog::before,
+.modal-dialog::after {
+  display: none !important;
+  content: none !important;
+}
+
+/* Force stable modal content */
+.modal-content {
+  position: relative !important;
+  display: flex !important;
+  flex-direction: column !important;
+  width: 100% !important;
+  max-width: 600px !important;
+  margin: 0 !important;
+  pointer-events: auto !important;
+  background-color: #fff !important;
+  background-clip: padding-box !important;
+  border: 1px solid #dee2e6 !important;
+  border-radius: 8px !important;
+  outline: 0 !important;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3) !important;
+  transition: none !important;
+  animation: none !important;
+  transform: none !important;
+  opacity: 1 !important;
+}
+
+/* Disable all possible animations globally */
+* {
+  transition: none !important;
+  animation: none !important;
+  transform: none !important;
+}
+
+/* Re-enable only what we need for basic functionality */
+button:hover {
+  transition: background-color 0.1s ease !important;
+}
+
+input:focus,
+textarea:focus,
+select:focus {
+  transition: border-color 0.1s ease, box-shadow 0.1s ease !important;
+}

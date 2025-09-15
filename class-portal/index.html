@@ -6,10 +6,60 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Vite + React</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
+           <style>
+             /* CLEAN MODAL STYLES - NO CONFLICTS */
+             .modal, .modal * {
+               transition: none !important;
+               animation: none !important;
+               transform: none !important;
+             }
+           </style>
   </head>
   <body>
     <div id="root"></div>
     <script type="module" src="/src/main.jsx"></script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM" crossorigin="anonymous"></script>
+           <script>
+             // TARGETED MODAL FIX - PREVENT AUTO-OPENING ONLY
+             document.addEventListener('DOMContentLoaded', function() {
+               // Wait for React to render, then hide any auto-opened modals
+               setTimeout(() => {
+                 const modals = document.querySelectorAll('.modal');
+                 modals.forEach(modal => {
+                   if (modal.classList.contains('show')) {
+                     modal.classList.remove('show');
+                     modal.style.display = 'none';
+                     modal.setAttribute('aria-hidden', 'true');
+                   }
+                 });
+                 
+                 // Remove any backdrops
+                 const backdrops = document.querySelectorAll('.modal-backdrop');
+                 backdrops.forEach(backdrop => backdrop.remove());
+                 
+                 // Remove modal-open class from body
+                 document.body.classList.remove('modal-open');
+               }, 500);
+               
+               // Disable modal animations
+               const disableAnimations = () => {
+                 const modals = document.querySelectorAll('.modal, .modal *');
+                 modals.forEach(el => {
+                   el.style.transition = 'none';
+                   el.style.animation = 'none';
+                   el.style.transform = 'none';
+                 });
+               };
+               
+               disableAnimations();
+               setTimeout(disableAnimations, 100);
+               
+               // Watch for modal changes
+               const observer = new MutationObserver(() => {
+                 disableAnimations();
+               });
+               observer.observe(document.body, { childList: true, subtree: true });
+             });
+           </script>
   </body>
 </html>

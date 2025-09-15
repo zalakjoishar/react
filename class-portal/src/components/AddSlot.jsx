@@ -3,101 +3,236 @@ import { useForm } from "react-hook-form";
 import { toast, ToastContainer } from "react-toastify";
 
 function AddSlot() {
-    const{
+  const {
     handleSubmit,
     register,
-    formState:{errors},
+    formState: { errors },
     reset
-  }=useForm()
-  const onSubmit=(data)=>{
+  } = useForm()
+  
+  const [bat, setBat] = useState(null)
+  const [cla, setCla] = useState(null)
+  const [loading, setLoading] = useState(false)
+  
+  const onSubmit = (data) => {
+    setLoading(true)
     console.log(data)
-    fetch("http://localhost:8080/slot",{
-      method:"POST",
-      headers:{
-        "Content-Type":"application/json"
+    fetch("http://localhost:8080/slot", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json"
       },
-      body:JSON.stringify({
-        id:data.id,
-        name:data.name,
-        age:data.age,
-        gender:data.gender,
-        phoneNo:data.phoneNo,
-        emailId:data.emailId,
+      body: JSON.stringify({
+        id: data.id,
+        day: data.day,
+        startTime: data.startTime,
+        endTime: data.endTime
       })
-    }).then(res=>res.json())
-    .then(res=>{
-        console.log("Response",res);
-        fetch(`http://localhost:8080/slot/${data.id}/classRoom`,{
-            method:"PUT",
-            headers:{
-            "Content-Type":"text/uri-list"
-            },
-            body:data.classRoom
-        }).then(res=>{
-        console.log(res)
-        fetch(`http://localhost:8080/slot/${data.id}/batch`,{
-          method:"PUT",
-          headers:{
-            "Content-Type":"text/uri-list"
+    })
+    .then(res => res.json())
+    .then(res => {
+      console.log("Response", res);
+      
+      // Link to classroom
+      fetch(`http://localhost:8080/slot/${data.id}/classRoom`, {
+        method: "PUT",
+        headers: {
+          "Content-Type": "text/uri-list"
+        },
+        body: data.classRoom
+      })
+      .then(res => res.text())
+      .then(res => {
+        console.log('Classroom linked:', res)
+        
+        // Link to batch
+        fetch(`http://localhost:8080/slot/${data.id}/batch`, {
+          method: "PUT",
+          headers: {
+            "Content-Type": "text/uri-list"
           },
-        body:data.batch
+          body: data.batch
+        })
+        .then(res => res.text())
+        .then(res => {
+          console.log('Batch linked:', res)
+          toast.success(`Time slot added successfully! 🎉`)
+          reset()
+          setLoading(false)
+        })
+        .catch(error => {
+          console.error('Batch linking error:', error)
+          toast.error("Failed to link batch")
+          setLoading(false)
+        })
+      })
+      .catch(error => {
+        console.error('Classroom linking error:', error)
+        toast.error("Failed to link classroom")
+        setLoading(false)
       })
     })
-    toast.success(`${data.name} added`)
-    reset()
+    .catch(error => {
+      toast.error("Failed to add time slot")
+      setLoading(false)
     })
-    .catch(error=>toast.error("failed to add product"))
   }
-  const [bat,setBat]=useState(null)
-  const fetchBatch=()=>{
-    fetch("http://localhost:8080/batch").then(res=>res.json()).then(data=>setBat(data["_embedded"]["batches"]))
+  
+  const fetchBatch = () => {
+    fetch("http://localhost:8080/batch")
+      .then(res => res.json())
+      .then(data => setBat(data["_embedded"]["batches"]))
   }
-  const [cla,setCla]=useState(null)
-  const fetchCla=()=>{
-    fetch("http://localhost:8080/classRoom").then(res=>res.json()).then(data=>setCla(data["_embedded"]["classRooms"]))
+  
+  const fetchCla = () => {
+    fetch("http://localhost:8080/classRoom")
+      .then(res => res.json())
+      .then(data => setCla(data["_embedded"]["classRooms"]))
   }
-  useEffect(()=>{
+  
+  useEffect(() => {
     fetchBatch()
     fetchCla()
-  },[])
+  }, [])
+
   return (
-    <div>
-        <form className='container m-3 p-4 border border-secondary' onSubmit={handleSubmit(onSubmit)}>
-        <div className="mb-3">
-          <label htmlFor="exampleInputEmail1" className="form-label">Enter id</label>
-          <input type="number" className="form-control" id="exampleInputEmail1" aria-describedby="emailHelp" {...register("id",{required:"id is required"})}/>
-          {errors.id && <div id='emailHelp' className='form-text'>{errors.id.message}</div>}
+    <div className="row justify-content-center">
+      <div className="col-lg-8 col-xl-6">
+        <div className="card">
+          <div className="card-header text-center">
+            <h4 className="mb-0">⏰ Add New Time Slot</h4>
+            <small className="text-muted">Fill in the time slot information below</small>
+          </div>
+          <div className="card-body">
+            <form onSubmit={handleSubmit(onSubmit)}>
+              <div className="row">
+                <div className="col-md-6 mb-3">
+                  <label htmlFor="slotId" className="form-label">
+                    <span className="me-2">🆔</span>Slot ID
+                  </label>
+                  <input 
+                    type="number" 
+                    className={`form-control ${errors.id ? 'is-invalid' : ''}`}
+                    id="slotId"
+                    placeholder="Enter slot ID"
+                    {...register("id", { required: "Slot ID is required" })}
+                  />
+                  {errors.id && <div className="invalid-feedback">{errors.id.message}</div>}
+                </div>
+                
+                <div className="col-md-6 mb-3">
+                  <label htmlFor="slotDay" className="form-label">
+                    <span className="me-2">📅</span>Day
+                  </label>
+                  <input 
+                    type="text" 
+                    className={`form-control ${errors.day ? 'is-invalid' : ''}`}
+                    id="slotDay"
+                    placeholder="Enter day (e.g., Monday)"
+                    {...register("day", { required: "Day is required" })}
+                  />
+                  {errors.day && <div className="invalid-feedback">{errors.day.message}</div>}
+                </div>
+              </div>
+
+              <div className="row">
+                <div className="col-md-6 mb-3">
+                  <label htmlFor="startTime" className="form-label">
+                    <span className="me-2">🕐</span>Start Time
+                  </label>
+                  <input 
+                    type="time" 
+                    className={`form-control ${errors.startTime ? 'is-invalid' : ''}`}
+                    id="startTime"
+                    {...register("startTime", { required: "Start time is required" })}
+                  />
+                  {errors.startTime && <div className="invalid-feedback">{errors.startTime.message}</div>}
+                </div>
+                
+                <div className="col-md-6 mb-3">
+                  <label htmlFor="endTime" className="form-label">
+                    <span className="me-2">🕕</span>End Time
+                  </label>
+                  <input 
+                    type="time" 
+                    className={`form-control ${errors.endTime ? 'is-invalid' : ''}`}
+                    id="endTime"
+                    {...register("endTime", { required: "End time is required" })}
+                  />
+                  {errors.endTime && <div className="invalid-feedback">{errors.endTime.message}</div>}
+                </div>
+              </div>
+
+              <div className="row">
+                <div className="col-md-6 mb-3">
+                  <label htmlFor="batchSelect" className="form-label">
+                    <span className="me-2">📚</span>Select Batch
+                  </label>
+                  <select 
+                    className={`form-select ${errors.batch ? 'is-invalid' : ''}`}
+                    id="batchSelect"
+                    {...register("batch", { required: "Batch selection is required" })}
+                  >
+                    <option value="">Choose a batch...</option>
+                    {bat && bat.map((c, i) => (
+                      <option value={c._links.self.href} key={i}>
+                        {c.name}
+                      </option>
+                    ))}
+                  </select>
+                  {errors.batch && <div className="invalid-feedback">{errors.batch.message}</div>}
+                </div>
+                
+                <div className="col-md-6 mb-3">
+                  <label htmlFor="classroomSelect" className="form-label">
+                    <span className="me-2">🏫</span>Select Classroom
+                  </label>
+                  <select 
+                    className={`form-select ${errors.classRoom ? 'is-invalid' : ''}`}
+                    id="classroomSelect"
+                    {...register("classRoom", { required: "Classroom selection is required" })}
+                  >
+                    <option value="">Choose a classroom...</option>
+                    {cla && cla.map((c, i) => (
+                      <option value={c._links.self.href} key={i}>
+                        {c.name}
+                      </option>
+                    ))}
+                  </select>
+                  {errors.classRoom && <div className="invalid-feedback">{errors.classRoom.message}</div>}
+                </div>
+              </div>
+
+              <div className="d-grid gap-2 d-md-flex justify-content-md-end">
+                <button 
+                  type="button" 
+                  className="btn btn-outline-secondary me-md-2"
+                  onClick={() => reset()}
+                >
+                  <span className="me-2">🔄</span> Reset
+                </button>
+                <button 
+                  type="submit" 
+                  className="btn btn-primary"
+                  disabled={loading}
+                >
+                  {loading ? (
+                    <>
+                      <span className="loading-spinner me-2"></span>
+                      Adding...
+                    </>
+                  ) : (
+                    <>
+                      <span className="me-2">⏰</span> Add Time Slot
+                    </>
+                  )}
+                </button>
+              </div>
+            </form>
+          </div>
         </div>
-        <div className="mb-3">
-          <label htmlFor="exampleInputEmail1" className="form-label">Enter day</label>
-          <input type="text" className="form-control" id="exampleInputEmail1" aria-describedby="emailHelp" {...register("day",{required:"name is required"})}/>
-          {errors.day && <div id='emailHelp' className='form-text'>{errors.day.message}</div>}
-        </div>
-        <div className="mb-3">
-          <label htmlFor="exampleInputEmail1" className="form-label">Enter start time</label>
-          <input type="time" className="form-control" id="exampleInputEmail1" aria-describedby="emailHelp" {...register("startTime",{required:"age is required"})}/>
-          {errors.startTime && <div id='emailHelp' className='form-text'>{errors.startTime.message}</div>}
-        </div>
-        <div className="mb-3">
-          <label htmlFor="exampleInputEmail1" className="form-label">Enter end Time</label>
-          <input type="time" className="form-control" id="exampleInputEmail1" aria-describedby="emailHelp" {...register("endTime",{required:"PhoneNo is required"})}/>
-          {errors.endTime && <div id='emailHelp' className='form-text'>{errors.endTime.message}</div>}
-        </div>
-        <div className='mb-3'>
-          <select className="form-select" aria-label="Default select example" {...register("batch",{required:"Batch is required"})}>
-            <option defaultValue={true}>select batch</option>
-            {bat && bat .map((c,i)=><option value={c._links.self.href} key={i}>{c.name}</option>)}
-          </select>
-        </div>
-        <div className='mb-3'>
-          <select className="form-select" aria-label="Default select example" {...register("classRoom",{required:"classRoom is required"})}>
-            <option defaultValue={true}>select classRoom</option>
-            {cla && cla .map((c,i)=><option value={c._links.self.href} key={i}>{c.name}</option>)}
-          </select>
-        </div>
-        <button type="submit" className="btn btn-primary">Add Student</button>
-      </form>
-      <ToastContainer/>
+      </div>
+      <ToastContainer />
     </div>
   )
 }

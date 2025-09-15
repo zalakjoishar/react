@@ -3,81 +3,184 @@ import { useForm } from 'react-hook-form'
 import { toast, ToastContainer } from 'react-toastify'
 
 function AddEvent() {
-  const{
-      handleSubmit,
-      register,
-      formState:{errors},
-      reset
-    }=useForm()
-    const onSubmit=(data)=>{
-      console.log(data)
-      fetch("http://localhost:8080/event",{
-        method:"POST",
-        headers:{
-          "Content-Type":"application/json"
-        },
-        body:JSON.stringify({
-          id:data.id,
-          name:data.name,
-          date:data.date,
-          location:data.location
-        })
-      }).then(res=>res.json())
-    .then(res=>{
-      console.log("Response",res);
-      
-      fetch(`http://localhost:8080/student/${data.id}/batch`,{
-        method:"PUT",
-        headers:{
-            "Content-Type":"text/uri-list"
-        },
-        body:data.batch
-      }).then(res=>res.text()).then(res=>{
-        console.log(res);
-        toast.success(`${data.name} added`)
-        reset()
+  const {
+    handleSubmit,
+    register,
+    formState: { errors },
+    reset
+  } = useForm()
+  
+  const [bat, setBat] = useState(null)
+  const [loading, setLoading] = useState(false)
+  
+  const onSubmit = (data) => {
+    setLoading(true)
+    console.log(data)
+    fetch("http://localhost:8080/event", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json"
+      },
+      body: JSON.stringify({
+        id: data.id,
+        name: data.name,
+        date: data.date,
+        location: data.location
       })
-    }).catch(error=>toast.error("failed to add product"))
+    })
+    .then(res => res.json())
+    .then(res => {
+      console.log("Response", res);
+      
+      fetch(`http://localhost:8080/event/${data.id}/batch`, {
+        method: "PUT",
+        headers: {
+          "Content-Type": "text/uri-list"
+        },
+        body: data.batch
+      })
+      .then(res => res.text())
+      .then(res => {
+        console.log(res);
+        toast.success(`${data.name} added successfully! 🎉`)
+        reset()
+        setLoading(false)
+      })
+    })
+    .catch(error => {
+      toast.error("Failed to add event")
+      setLoading(false)
+    })
   }
-  const [bat,setBat]=useState(null)
-  const fetchBatch=()=>{
-    fetch("http://localhost:8080/batch").then(res=>res.json()).then(data=>setBat(data["_embedded"]["batches"]))
+  
+  const fetchBatch = () => {
+    fetch("http://localhost:8080/batch")
+      .then(res => res.json())
+      .then(data => setBat(data["_embedded"]["batches"]))
   }
-  useEffect(()=>{
+  
+  useEffect(() => {
     fetchBatch()
-  },[])
+  }, [])
+
   return (
-    <div>
-      <form className='container m-3 p-4 border border-secondary' onSubmit={handleSubmit(onSubmit)}>
-        <div className="mb-3">
-          <label htmlFor="exampleInputEmail1" className="form-label">Enter id</label>
-          <input type="number" className="form-control" id="exampleInputEmail1" aria-describedby="emailHelp" {...register("id",{required:"id is required"})}/>
-          {errors.id && <div id='emailHelp' className='form-text'>{errors.id.message}</div>}
+    <div className="row justify-content-center">
+      <div className="col-lg-8 col-xl-6">
+        <div className="card">
+          <div className="card-header text-center">
+            <h4 className="mb-0">📅 Add New Event</h4>
+            <small className="text-muted">Fill in the event information below</small>
+          </div>
+          <div className="card-body">
+            <form onSubmit={handleSubmit(onSubmit)}>
+              <div className="row">
+                <div className="col-md-6 mb-3">
+                  <label htmlFor="eventId" className="form-label">
+                    <span className="me-2">🆔</span>Event ID
+                  </label>
+                  <input 
+                    type="number" 
+                    className={`form-control ${errors.id ? 'is-invalid' : ''}`}
+                    id="eventId"
+                    placeholder="Enter event ID"
+                    {...register("id", { required: "Event ID is required" })}
+                  />
+                  {errors.id && <div className="invalid-feedback">{errors.id.message}</div>}
+                </div>
+                
+                <div className="col-md-6 mb-3">
+                  <label htmlFor="eventName" className="form-label">
+                    <span className="me-2">📅</span>Event Name
+                  </label>
+                  <input 
+                    type="text" 
+                    className={`form-control ${errors.name ? 'is-invalid' : ''}`}
+                    id="eventName"
+                    placeholder="Enter event name"
+                    {...register("name", { required: "Event name is required" })}
+                  />
+                  {errors.name && <div className="invalid-feedback">{errors.name.message}</div>}
+                </div>
+              </div>
+
+              <div className="row">
+                <div className="col-md-6 mb-3">
+                  <label htmlFor="eventDate" className="form-label">
+                    <span className="me-2">📆</span>Event Date
+                  </label>
+                  <input 
+                    type="date" 
+                    className={`form-control ${errors.date ? 'is-invalid' : ''}`}
+                    id="eventDate"
+                    {...register("date", { required: "Event date is required" })}
+                  />
+                  {errors.date && <div className="invalid-feedback">{errors.date.message}</div>}
+                </div>
+                
+                <div className="col-md-6 mb-3">
+                  <label htmlFor="eventLocation" className="form-label">
+                    <span className="me-2">📍</span>Location
+                  </label>
+                  <input 
+                    type="text" 
+                    className={`form-control ${errors.location ? 'is-invalid' : ''}`}
+                    id="eventLocation"
+                    placeholder="Enter event location"
+                    {...register("location", { required: "Location is required" })}
+                  />
+                  {errors.location && <div className="invalid-feedback">{errors.location.message}</div>}
+                </div>
+              </div>
+
+              <div className="mb-4">
+                <label htmlFor="batchSelect" className="form-label">
+                  <span className="me-2">📚</span>Select Batch
+                </label>
+                <select 
+                  className={`form-select ${errors.batch ? 'is-invalid' : ''}`}
+                  id="batchSelect"
+                  {...register("batch", { required: "Batch selection is required" })}
+                >
+                  <option value="">Choose a batch...</option>
+                  {bat && bat.map((c, i) => (
+                    <option value={c._links.self.href} key={i}>
+                      {c.name}
+                    </option>
+                  ))}
+                </select>
+                {errors.batch && <div className="invalid-feedback">{errors.batch.message}</div>}
+              </div>
+
+              <div className="d-grid gap-2 d-md-flex justify-content-md-end">
+                <button 
+                  type="button" 
+                  className="btn btn-outline-secondary me-md-2"
+                  onClick={() => reset()}
+                >
+                  <span className="me-2">🔄</span> Reset
+                </button>
+                <button 
+                  type="submit" 
+                  className="btn btn-primary"
+                  disabled={loading}
+                >
+                  {loading ? (
+                    <>
+                      <span className="loading-spinner me-2"></span>
+                      Adding...
+                    </>
+                  ) : (
+                    <>
+                      <span className="me-2">📅</span> Add Event
+                    </>
+                  )}
+                </button>
+              </div>
+            </form>
+          </div>
         </div>
-        <div className="mb-3">
-          <label htmlFor="exampleInputEmail1" className="form-label">Enter name</label>
-          <input type="text" className="form-control" id="exampleInputEmail1" aria-describedby="emailHelp" {...register("name",{required:"name is required"})}/>
-          {errors.name && <div id='emailHelp' className='form-text'>{errors.name.message}</div>}
-        </div>
-        <div className="mb-3">
-          <label htmlFor="exampleInputEmail1" className="form-label">Enter date</label>
-          <input type="date" className="form-control" id="exampleInputEmail1" aria-describedby="emailHelp" {...register("date",{required:"date is required"})}/>
-          {errors.date && <div id='emailHelp' className='form-text'>{errors.date.message}</div>}
-        </div>
-        <div className="mb-3">
-          <label htmlFor="exampleInputEmail1" className="form-label">Enter location</label>
-          <input type="text" className="form-control" id="exampleInputEmail1" aria-describedby="emailHelp" {...register("location",{required:"location is required"})}/>
-          {errors.location && <div id='emailHelp' className='form-text'>{errors.location.message}</div>}
-        </div>
-        <div className='mb-3'>
-          <select className="form-select" aria-label="Default select example" {...register("batch",{required:"Batch is required"})}>
-            <option defaultValue={true}>select batch</option>
-            {bat && bat .map((c,i)=><option value={c._links.self.href} key={i}>{c.name}</option>)}
-          </select>
-        </div>
-        <button type="submit" className="btn btn-primary">Add Event</button>
-      </form>
-      <ToastContainer/>
+      </div>
+      <ToastContainer />
     </div>
   )
 }

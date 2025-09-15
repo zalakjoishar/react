@@ -2,11 +2,13 @@ import { useState } from 'react'
 import {createBrowserRouter,RouterProvider} from 'react-router-dom'
 import './App.css'
 import Layout from './components/Layout'
+import Dashboard from './components/Dashboard'
 import AllStudent from './components/student/AllStudent'
 import AddStudent from './components/student/AddStudent'
 import AddBatch from './components/batch/AddBatch'
 import ShowBatches from './components/batch/ShowBatches'
 import Batch from './components/batch/Batch'
+import BatchDetails from './components/batch/BatchDetails'
 import AddClassroom from './components/AddClassroom'
 import AddEvent from './components/AddEvent'
 import AddCoordinator from './components/AddCoordinator'
@@ -18,6 +20,10 @@ const routes=createBrowserRouter([
     path:"",
     element:<Layout/>,
     children:[
+      {
+        path:"",
+        element:<Dashboard />
+      },
       {
         path:"student",
         element:<AllStudent />
@@ -33,6 +39,10 @@ const routes=createBrowserRouter([
       {
         path:"batch",
         element:<Batch />
+      },
+      {
+        path:"batch/:id",
+        element:<BatchDetails />
       },
       {
         path:"add-classRoom",

@@ -1,45 +1,113 @@
-import React from 'react'
+import React, { useState } from 'react'
 import { useForm } from 'react-hook-form'
-import { ToastContainer } from 'react-toastify'
+import { toast, ToastContainer } from 'react-toastify'
 
 function AddClassroom() {
-  const{
-      handleSubmit,
-      register,
-      formState:{errors},
-      reset
-    }=useForm()
-    const onSubmit=(data)=>{
-      console.log(data)
-      fetch("http://localhost:8080/classRoom",{
-        method:"POST",
-        headers:{
-          "Content-Type":"application/json"
-        },
-        body:JSON.stringify({
-          id:data.id,
-          name:data.name
-        })
-      }).then(res=>{res.json()
-      toast.success(`${data.name} added`)
-      reset()}).catch(error=>toast.error("failed to add event"))
-    }
+  const {
+    handleSubmit,
+    register,
+    formState: { errors },
+    reset
+  } = useForm()
+  
+  const [loading, setLoading] = useState(false)
+  
+  const onSubmit = (data) => {
+    setLoading(true)
+    console.log(data)
+    fetch("http://localhost:8080/classRoom", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json"
+      },
+      body: JSON.stringify({
+        id: data.id,
+        name: data.name
+      })
+    })
+    .then(res => res.json())
+    .then(res => {
+      console.log("Response", res);
+      toast.success(`${data.name} added successfully! 🎉`)
+      reset()
+      setLoading(false)
+    })
+    .catch(error => {
+      toast.error("Failed to add classroom")
+      setLoading(false)
+    })
+  }
+
   return (
-    <div>
-      <form className='container m-3 p-4 border border-secondary' onSubmit={handleSubmit(onSubmit)}>
-        <div className="mb-3">
-          <label htmlFor="exampleInputEmail1" className="form-label">Enter id</label>
-          <input type="number" className="form-control" id="exampleInputEmail1" aria-describedby="emailHelp" {...register("id",{required:"id is required"})}/>
-          {errors.id && <div id='emailHelp' className='form-text'>{errors.id.message}</div>}
+    <div className="row justify-content-center">
+      <div className="col-lg-8 col-xl-6">
+        <div className="card">
+          <div className="card-header text-center">
+            <h4 className="mb-0">🏫 Add New Classroom</h4>
+            <small className="text-muted">Fill in the classroom information below</small>
+          </div>
+          <div className="card-body">
+            <form onSubmit={handleSubmit(onSubmit)}>
+              <div className="row">
+                <div className="col-md-6 mb-3">
+                  <label htmlFor="classroomId" className="form-label">
+                    <span className="me-2">🆔</span>Classroom ID
+                  </label>
+                  <input 
+                    type="number" 
+                    className={`form-control ${errors.id ? 'is-invalid' : ''}`}
+                    id="classroomId"
+                    placeholder="Enter classroom ID"
+                    {...register("id", { required: "Classroom ID is required" })}
+                  />
+                  {errors.id && <div className="invalid-feedback">{errors.id.message}</div>}
+                </div>
+                
+                <div className="col-md-6 mb-3">
+                  <label htmlFor="classroomName" className="form-label">
+                    <span className="me-2">🏫</span>Classroom Name
+                  </label>
+                  <input 
+                    type="text" 
+                    className={`form-control ${errors.name ? 'is-invalid' : ''}`}
+                    id="classroomName"
+                    placeholder="Enter classroom name"
+                    {...register("name", { required: "Classroom name is required" })}
+                  />
+                  {errors.name && <div className="invalid-feedback">{errors.name.message}</div>}
+                </div>
+              </div>
+
+              <div className="d-grid gap-2 d-md-flex justify-content-md-end">
+                <button 
+                  type="button" 
+                  className="btn btn-outline-secondary me-md-2"
+                  onClick={() => reset()}
+                >
+                  <span className="me-2">🔄</span> Reset
+                </button>
+                <button 
+                  type="submit" 
+                  className="btn btn-primary"
+                  disabled={loading}
+                >
+                  {loading ? (
+                    <>
+                      <span className="loading-spinner me-2"></span>
+                      Adding...
+                    </>
+                  ) : (
+                    <>
+                      <span className="me-2">🏫</span> Add Classroom
+                    </>
+                  )}
+                </button>
+              </div>
+            </form>
+          </div>
         </div>
-        <div className="mb-3">
-          <label htmlFor="exampleInputEmail1" className="form-label">Enter name</label>
-          <input type="text" className="form-control" id="exampleInputEmail1" aria-describedby="emailHelp" {...register("name",{required:"name is required"})}/>
-          {errors.name && <div id='emailHelp' className='form-text'>{errors.name.message}</div>}
-        </div>
-        <button type="submit" className="btn btn-primary">Add ClassRoom</button>
-      </form>
-    <ToastContainer/>
+      </div>
+      <ToastContainer />
     </div>
   )
 }

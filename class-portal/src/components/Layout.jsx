@@ -4,9 +4,13 @@ import { Outlet } from 'react-router-dom'
 
 function Layout() {
   return (
-    <div>
+    <div className="min-vh-100 bg-light">
       <Navbar/>
-      <Outlet />
+      <main className="container-fluid py-4">
+        <div className="fade-in">
+          <Outlet />
+        </div>
+      </main>
     </div>
   )
 }
