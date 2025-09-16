@@ -14,6 +14,7 @@ import AddEvent from './components/AddEvent'
 import AddCoordinator from './components/AddCoordinator'
 import AddTrainer from './components/AddTrainer'
 import AddSlot from './components/AddSlot'
+import Reports from './components/Reports'
 
 const routes=createBrowserRouter([
   {
@@ -63,6 +64,10 @@ const routes=createBrowserRouter([
       {
         path:"add-slot",
         element:<AddSlot />
+      },
+      {
+        path:"reports",
+        element:<Reports />
       }
     ]
   }

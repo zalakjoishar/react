@@ -1,7 +1,7 @@
 import React from 'react'
 import { useLocation, useNavigate } from 'react-router-dom'
 
-function Navbar() {
+function Navbar({ isSidebarCollapsed, onToggleSidebar, isMobile }) {
   const location = useLocation()
   const navigate = useNavigate()
 
@@ -27,12 +27,12 @@ function Navbar() {
 
       // Special cases for better readability
       if (segment === 'student') label = 'Students'
-      if (segment === 'batch') label = 'Batches'
-      if (segment === 'classRoom') label = 'Classroom'
+      if (segment === 'batch') label = 'Dance Classes'
+      if (segment === 'classRoom') label = 'Studio'
       if (segment === 'coordinator') label = 'Coordinator'
-      if (segment === 'trainer') label = 'Trainer'
-      if (segment === 'event') label = 'Event'
-      if (segment === 'slot') label = 'Slot'
+      if (segment === 'trainer') label = 'Instructor'
+      if (segment === 'event') label = 'Performance'
+      if (segment === 'slot') label = 'Time Slot'
 
       breadcrumb.push({
         label,
@@ -49,32 +49,66 @@ function Navbar() {
   return (
     <nav className="navbar navbar-expand-lg navbar-light border-bottom shadow-sm" style={{backgroundColor: '#f8fafc'}}>
       <div className="container-fluid">
+        {/* Sidebar Toggle Button */}
+        <button 
+          className={`btn btn-outline-secondary ${isSidebarCollapsed ? 'me-1' : 'me-3'}`}
+          onClick={onToggleSidebar}
+          style={{
+            minWidth: '40px', 
+            height: '40px',
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center',
+            fontSize: '16px',
+            fontWeight: 'normal',
+            borderRadius: '8px',
+            borderColor: '#8B5CF6',
+            backgroundColor: 'white',
+            color: '#8B5CF6',
+            position: isSidebarCollapsed ? 'fixed' : 'relative',
+            left: isSidebarCollapsed ? '90px' : 'auto',
+            top: isSidebarCollapsed ? '1rem' : 'auto',
+            zIndex: isSidebarCollapsed ? 1001 : 'auto',
+            boxShadow: isSidebarCollapsed ? '0 2px 8px rgba(0, 0, 0, 0.15)' : 'none'
+          }}
+          title={isSidebarCollapsed ? 'Expand sidebar' : 'Collapse sidebar'}
+        >
+          {isSidebarCollapsed ? '☰' : '☰'}
+        </button>
+
+        {/* Dantra Logo (when sidebar is collapsed) */}
+        {isSidebarCollapsed && (
+          <div className="d-flex align-items-center me-3">
+          </div>
+        )}
         {/* Breadcrumb */}
-        <div className="navbar-nav me-auto">
-          <nav aria-label="breadcrumb">
-            <ol className="breadcrumb mb-0">
-              {breadcrumb.map((item, index) => (
-                <li key={index} className="breadcrumb-item">
-                  {item.isLast ? (
-                    <span style={{color: '#475569'}}>{item.label}</span>
-                  ) : (
-                    <button 
-                      className="btn btn-link p-0 text-decoration-none"
-                      onClick={() => navigate(item.path)}
-                      style={{ 
-                        color: '#64748b',
-                        fontSize: '0.875rem',
-                        fontWeight: '500'
-                      }}
-                    >
-                      {item.label}
-                    </button>
-                  )}
-                </li>
-              ))}
-            </ol>
-          </nav>
-        </div>
+        {location.pathname !== '/' && (
+          <div className="navbar-nav me-auto">
+            <nav aria-label="breadcrumb">
+              <ol className="breadcrumb mb-0">
+                {breadcrumb.map((item, index) => (
+                  <li key={index} className="breadcrumb-item">
+                    {item.isLast ? (
+                      <span style={{color: '#475569'}}>{item.label}</span>
+                    ) : (
+                      <button 
+                        className="btn btn-link p-0 text-decoration-none"
+                        onClick={() => navigate(item.path)}
+                        style={{ 
+                          color: '#64748b',
+                          fontSize: '0.875rem',
+                          fontWeight: '500'
+                        }}
+                      >
+                        {item.label}
+                      </button>
+                    )}
+                  </li>
+                ))}
+              </ol>
+            </nav>
+          </div>
+        )}
 
         {/* Admin Dropdown */}
         <div className="navbar-nav">
@@ -106,10 +140,14 @@ function Navbar() {
                 </a>
               </li>
               <li>
-                <a className="dropdown-item d-flex align-items-center" href="#">
+                <button 
+                  className="dropdown-item d-flex align-items-center" 
+                  onClick={() => navigate('/reports')}
+                  style={{border: 'none', background: 'none', width: '100%', textAlign: 'left'}}
+                >
                   <span className="me-2">📊</span>
                   Reports
-                </a>
+                </button>
               </li>
               <li>
                 <a className="dropdown-item d-flex align-items-center" href="#">

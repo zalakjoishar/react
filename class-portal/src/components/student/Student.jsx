@@ -39,22 +39,23 @@ function Student({id, name, age, gender, phoneNo, emailId, batch, refresh}) {
           <div className="d-flex align-items-center">
             <div>
               <div className="fw-semibold">{safeName}</div>
-              <small className="text-muted">{safePhoneNo}</small>
+              <small className="text-muted d-none d-md-inline">{safePhoneNo}</small>
+              <small className="text-muted d-md-none">{safeAge} years, {safeGender}</small>
             </div>
           </div>
         </td>
-        <td>
+        <td className="d-none d-md-table-cell">
           <span className="badge bg-light text-dark">{safeAge} years</span>
         </td>
-        <td>
+        <td className="d-none d-lg-table-cell">
           <span className={`fw-medium ${getGenderColor(safeGender)}`}>
             {getGenderIcon(safeGender)} {safeGender}
           </span>
         </td>
-        <td>
+        <td className="d-none d-xl-table-cell">
           <small className="text-muted">{safeEmailId}</small>
         </td>
-        <td>
+        <td className="d-none d-md-table-cell">
           {(() => {
             // Safety check to prevent object rendering
             if (!batch) return <span className="badge bg-secondary">No Batch</span>
@@ -64,7 +65,7 @@ function Student({id, name, age, gender, phoneNo, emailId, batch, refresh}) {
             }
             
             if (typeof batch === 'object' && batch.name) {
-              return <span className="badge bg-primary">{batch.name}</span>
+              return <span className="">{batch.name}</span>
             }
             
             // If batch is an object but doesn't have name, don't render it

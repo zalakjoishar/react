@@ -108,7 +108,7 @@ function AddSlot() {
               <div className="row">
                 <div className="col-md-6 mb-3">
                   <label htmlFor="slotId" className="form-label">
-                    <span className="me-2">🆔</span>Slot ID
+                    Slot ID
                   </label>
                   <input 
                     type="number" 
@@ -122,7 +122,7 @@ function AddSlot() {
                 
                 <div className="col-md-6 mb-3">
                   <label htmlFor="slotDay" className="form-label">
-                    <span className="me-2">📅</span>Day
+                    Day
                   </label>
                   <input 
                     type="text" 
@@ -138,7 +138,7 @@ function AddSlot() {
               <div className="row">
                 <div className="col-md-6 mb-3">
                   <label htmlFor="startTime" className="form-label">
-                    <span className="me-2">🕐</span>Start Time
+                    Start Time
                   </label>
                   <input 
                     type="time" 
@@ -151,7 +151,7 @@ function AddSlot() {
                 
                 <div className="col-md-6 mb-3">
                   <label htmlFor="endTime" className="form-label">
-                    <span className="me-2">🕕</span>End Time
+                    End Time
                   </label>
                   <input 
                     type="time" 
@@ -166,7 +166,7 @@ function AddSlot() {
               <div className="row">
                 <div className="col-md-6 mb-3">
                   <label htmlFor="batchSelect" className="form-label">
-                    <span className="me-2">📚</span>Select Batch
+                    Select Dance Class
                   </label>
                   <select 
                     className={`form-select ${errors.batch ? 'is-invalid' : ''}`}
@@ -185,7 +185,7 @@ function AddSlot() {
                 
                 <div className="col-md-6 mb-3">
                   <label htmlFor="classroomSelect" className="form-label">
-                    <span className="me-2">🏫</span>Select Classroom
+                    Select Studio
                   </label>
                   <select 
                     className={`form-select ${errors.classRoom ? 'is-invalid' : ''}`}
@@ -209,7 +209,7 @@ function AddSlot() {
                   className="btn btn-outline-secondary me-md-2"
                   onClick={() => reset()}
                 >
-                  <span className="me-2">🔄</span> Reset
+                  Reset
                 </button>
                 <button 
                   type="submit" 
@@ -223,7 +223,7 @@ function AddSlot() {
                     </>
                   ) : (
                     <>
-                      <span className="me-2">⏰</span> Add Time Slot
+                      Add Time Slot
                     </>
                   )}
                 </button>

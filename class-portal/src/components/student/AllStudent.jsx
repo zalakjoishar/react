@@ -9,58 +9,70 @@ function AllStudent() {
   const [searchTerm, setSearchTerm] = useState('')
   const navigate = useNavigate()
   
-  const fetchStudent = () => {
+  const fetchStudent = async () => {
     setLoading(true)
     console.log('Fetching students from: http://localhost:8080/student')
     
-    // Add timeout to prevent hanging
-    const controller = new AbortController()
-    const timeoutId = setTimeout(() => controller.abort(), 10000) // 10 second timeout
-    
-    fetch(`http://localhost:8080/student`, {
-      signal: controller.signal,
-      headers: {
-        'Accept': 'application/json',
-        'Content-Type': 'application/json'
-      }
-    })
-      .then(res => {
-        console.log('Response status:', res.status)
-        console.log('Response headers:', res.headers)
+    try {
+      // Add timeout to prevent hanging
+      const controller = new AbortController()
+      const timeoutId = setTimeout(() => controller.abort(), 10000) // 10 second timeout
+      
+      // First, try to get all students with a large page size
+      let allStudents = []
+      let currentPage = 0
+      let hasMorePages = true
+      
+      while (hasMorePages) {
+        const response = await fetch(`http://localhost:8080/student?page=${currentPage}&size=100`, {
+          signal: controller.signal,
+          headers: {
+            'Accept': 'application/json',
+            'Content-Type': 'application/json'
+          }
+        })
         
-        if (!res.ok) {
-          throw new Error(`HTTP error! status: ${res.status}`)
+        if (!response.ok) {
+          throw new Error(`HTTP error! status: ${response.status}`)
         }
         
-        return res.json()
-      })
-      .then(data => {
-        console.log('Raw API response:', data)
+        const data = await response.json()
+        console.log(`Page ${currentPage} response:`, data)
         
         if (data && data["_embedded"] && data["_embedded"]["students"]) {
-          SetStudent(data["_embedded"]["students"])
-          setFilteredStudents(data["_embedded"]["students"])
-          console.log('Students loaded:', data["_embedded"]["students"])
-        } else {
-          console.log('No students found or unexpected data structure:', data)
-          SetStudent([])
-          setFilteredStudents([])
-        }
-        setLoading(false)
-      })
-      .catch(error => {
-        clearTimeout(timeoutId)
-        console.error('Error fetching students:', error)
-        console.error('Error details:', error.message)
-        
-        if (error.name === 'AbortError') {
-          console.error('Request timed out after 10 seconds')
+          allStudents = [...allStudents, ...data["_embedded"]["students"]]
+          console.log(`Loaded ${data["_embedded"]["students"].length} students from page ${currentPage}`)
         }
         
-        SetStudent([])
-        setFilteredStudents([])
-        setLoading(false)
-      })
+        // Check if there are more pages
+        const pageInfo = data.page
+        hasMorePages = pageInfo && (currentPage + 1) < pageInfo.totalPages
+        
+        if (hasMorePages) {
+          currentPage++
+        }
+        
+        console.log('Page info:', {
+          currentPage,
+          totalPages: pageInfo?.totalPages,
+          totalElements: pageInfo?.totalElements,
+          hasMorePages
+        })
+      }
+      
+      clearTimeout(timeoutId)
+      
+      console.log(`Total students loaded: ${allStudents.length}`)
+      SetStudent(allStudents)
+      setFilteredStudents(allStudents)
+      setLoading(false)
+      
+    } catch (error) {
+      console.error('Error fetching students:', error)
+      SetStudent([])
+      setFilteredStudents([])
+      setLoading(false)
+    }
   }
 
   // Search functionality
@@ -95,7 +107,7 @@ function AllStudent() {
   return (
     <div className="row">
       <div className="col-12">
-        <div className="card">
+        <div className="card" style={{overflow: 'hidden'}}>
           <div className="card-header d-flex justify-content-between align-items-center">
             <div>
               <h4 className="mb-0">👥 All Students</h4>
@@ -156,17 +168,17 @@ function AllStudent() {
                 </button>
               </div>
             ) : filteredStudents && filteredStudents.length > 0 ? (
-              <div className="table-responsive">
+              <div className="table-responsive" style={{overflowX: 'hidden'}}>
                 <table className="table table-hover mb-0">
                   <thead>
                     <tr>
-                      <th scope="col" className="border-0">Roll No</th>
-                      <th scope="col" className="border-0">Name</th>
-                      <th scope="col" className="border-0">Age</th>
-                      <th scope="col" className="border-0">Gender</th>
-                      <th scope="col" className="border-0">Email</th>
-                      <th scope="col" className="border-0">Batch</th>
-                      <th scope="col" className="border-0 text-center">Actions</th>
+                      <th scope="col" className="border-0" style={{minWidth: '80px'}}>Roll No</th>
+                      <th scope="col" className="border-0" style={{minWidth: '150px'}}>Name</th>
+                      <th scope="col" className="border-0 d-none d-md-table-cell" style={{minWidth: '80px'}}>Age</th>
+                      <th scope="col" className="border-0 d-none d-lg-table-cell" style={{minWidth: '100px'}}>Gender</th>
+                      <th scope="col" className="border-0 d-none d-xl-table-cell" style={{minWidth: '180px'}}>Email</th>
+                      <th scope="col" className="border-0 d-none d-md-table-cell" style={{minWidth: '120px'}}>Dance Class</th>
+                      <th scope="col" className="border-0 text-center" style={{minWidth: '120px'}}>Actions</th>
                     </tr>
                   </thead>
                   <tbody>
@@ -196,14 +208,14 @@ function AllStudent() {
                 </button>
               </div>
             ) : (
-              <div className="text-center py-5">
-                <div className="text-muted mb-3" style={{fontSize: '3rem'}}>👥</div>
-                <h5 className="text-muted">No students found</h5>
-                <p className="text-muted">Get started by adding your first student</p>
-                <button className="btn btn-primary" onClick={() => navigate('/add-student')}>
-                  <span className="me-2">➕</span>Add Student
-                </button>
-              </div>
+                <div className="text-center py-5">
+                  <img src="/dantra logo.png" alt="Dantra Logo" style={{width: '48px', height: '48px', objectFit: 'contain', marginBottom: '1rem'}} />
+                  <h5 className="text-muted">No students found</h5>
+                  <p className="text-muted">Get started by adding your first student</p>
+                  <button className="btn btn-primary" onClick={() => navigate('/add-student')}>
+                    <span className="me-2">➕</span>Add Student
+                  </button>
+                </div>
             )}
           </div>
         </div>

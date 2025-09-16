@@ -65,8 +65,8 @@ function Batch() {
         <div className="card">
           <div className="card-header d-flex justify-content-between align-items-center">
             <div>
-              <h4 className="mb-0">📚 All Batches</h4>
-              <small className="text-muted">Manage batch information and student assignments</small>
+              <h4 className="mb-0">🎭 All Dance Classes</h4>
+              <small className="text-muted">Manage dance class information and student assignments</small>
             </div>
             <div className="d-flex gap-2 align-items-center">
               {/* Search Bar */}
@@ -78,7 +78,7 @@ function Batch() {
                   <input 
                     type="text" 
                     className="form-control" 
-                    placeholder="Search by ID, Name, Certification, or Genre..." 
+                    placeholder="Search by ID, Name, Certification, or Dance Style..." 
                     value={searchTerm}
                     onChange={handleSearch}
                   />
@@ -101,7 +101,7 @@ function Batch() {
                 )}
               </div>
               <button className="btn btn-primary btn-sm" onClick={() => navigate('/add-batch')}>
-                <span className="me-2">➕</span>Add Batch
+                <span className="me-2">➕</span>Add Dance Class
               </button>
             </div>
           </div>
@@ -130,19 +130,19 @@ function Batch() {
             ) : searchTerm ? (
               <div className="text-center search-no-results">
                 <div className="text-muted mb-3" style={{fontSize: '3rem'}}>🔍</div>
-                <h5 className="text-muted">No batches found</h5>
-                <p className="text-muted">No batches match your search criteria</p>
+                <h5 className="text-muted">No dance classes found</h5>
+                <p className="text-muted">No dance classes match your search criteria</p>
                 <button className="btn btn-outline-primary" onClick={clearSearch}>
                   Clear Search
                 </button>
               </div>
             ) : (
               <div className="text-center py-5">
-                <div className="text-muted mb-3" style={{fontSize: '3rem'}}>📚</div>
-                <h5 className="text-muted">No batches found</h5>
-                <p className="text-muted">Get started by creating your first batch</p>
+                <div className="text-muted mb-3" style={{fontSize: '3rem'}}>🎭</div>
+                <h5 className="text-muted">No dance classes found</h5>
+                <p className="text-muted">Get started by creating your first dance class</p>
                 <button className="btn btn-primary" onClick={() => navigate('/add-batch')}>
-                  <span className="me-2">➕</span>Add Batch
+                  <span className="me-2">➕</span>Add Dance Class
                 </button>
               </div>
             )}

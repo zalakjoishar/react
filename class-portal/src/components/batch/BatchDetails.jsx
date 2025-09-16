@@ -15,6 +15,9 @@ function BatchDetails() {
   const [classroom, setClassroom] = useState(null)
   const [loading, setLoading] = useState(true)
   const [showEditForm, setShowEditForm] = useState(false)
+  const [classrooms, setClassrooms] = useState([])
+  const [coordinators, setCoordinators] = useState([])
+  const [trainers, setTrainers] = useState([])
   
   const {
     handleSubmit,
@@ -25,9 +28,13 @@ function BatchDetails() {
     defaultValues: {
       name: '',
       certification: '',
-      genre: ''
+      genre: '',
+      trainerId: '',
+      coordinatorId: '',
+      classroomId: ''
     }
   })
+
 
   useEffect(() => {
     fetchBatchDetails()
@@ -47,21 +54,17 @@ function BatchDetails() {
       console.log('Coordinator object:', batchData.coordinator)
       console.log('Classroom object:', batchData.classRoom)
       
-      // Reset form with batch data
-      reset({
-        name: batchData.name || '',
-        certification: batchData.certification || '',
-        genre: batchData.genre || ''
-      })
-
       // Fetch related data in parallel
-      const [studentsRes, eventsRes, slotsRes, trainerRes, coordinatorRes, classroomRes] = await Promise.all([
+      const [studentsRes, eventsRes, slotsRes, trainerRes, coordinatorRes, classroomRes, allTrainersRes, allCoordinatorsRes, allClassroomsRes] = await Promise.all([
         fetch(`http://localhost:8080/batch/${id}/student`).catch(() => ({ json: () => ({ "_embedded": { "students": [] } }) })),
         fetch(`http://localhost:8080/batch/${id}/event`).catch(() => ({ json: () => ({ "_embedded": { "events": [] } }) })),
         fetch(`http://localhost:8080/batch/${id}/slot`).catch(() => ({ json: () => ({ "_embedded": { "slots": [] } }) })),
         fetch(`http://localhost:8080/batch/${id}/trainer`).catch(() => ({ json: () => null })),
         fetch(`http://localhost:8080/batch/${id}/coordinator`).catch(() => ({ json: () => null })),
-        fetch(`http://localhost:8080/batch/${id}/classRoom`).catch(() => ({ json: () => null }))
+        fetch(`http://localhost:8080/batch/${id}/classRoom`).catch(() => ({ json: () => null })),
+        fetch('http://localhost:8080/trainer').catch(() => ({ json: () => ({ "_embedded": { "trainers": [] } }) })),
+        fetch('http://localhost:8080/coordinator').catch(() => ({ json: () => ({ "_embedded": { "coordinators": [] } }) })),
+        fetch('http://localhost:8080/classRoom').catch(() => ({ json: () => ({ "_embedded": { "classRooms": [] } }) }))
       ])
 
       const studentsData = await studentsRes.json()
@@ -70,6 +73,9 @@ function BatchDetails() {
       const trainerData = await trainerRes.json()
       const coordinatorData = await coordinatorRes.json()
       const classroomData = await classroomRes.json()
+      const allTrainersData = await allTrainersRes.json()
+      const allCoordinatorsData = await allCoordinatorsRes.json()
+      const allClassroomsData = await allClassroomsRes.json()
 
       setStudents(studentsData["_embedded"]?.students || [])
       setEvents(eventsData["_embedded"]?.events || [])
@@ -77,11 +83,27 @@ function BatchDetails() {
       setTrainer(trainerData)
       setCoordinator(coordinatorData)
       setClassroom(classroomData)
+      setTrainers(allTrainersData["_embedded"]?.trainers || [])
+      setCoordinators(allCoordinatorsData["_embedded"]?.coordinators || [])
+      setClassrooms(allClassroomsData["_embedded"]?.classRooms || [])
+      
+      // Reset form with batch data after fetching related data
+      reset({
+        name: batchData.name || '',
+        certification: batchData.certification || '',
+        genre: batchData.genre || '',
+        trainerId: trainerData?._links?.self?.href || '',
+        coordinatorId: coordinatorData?._links?.self?.href || '',
+        classroomId: classroomData?._links?.self?.href || ''
+      })
       
       // Debug logging for fetched data
       console.log('Fetched trainer:', trainerData)
       console.log('Fetched coordinator:', coordinatorData)
       console.log('Fetched classroom:', classroomData)
+      console.log('All trainers:', allTrainersData["_embedded"]?.trainers || [])
+      console.log('All coordinators:', allCoordinatorsData["_embedded"]?.coordinators || [])
+      console.log('All classrooms:', allClassroomsData["_embedded"]?.classRooms || [])
       
     } catch (error) {
       console.error('Error fetching batch details:', error)
@@ -93,6 +115,7 @@ function BatchDetails() {
 
   const onSubmit = async (data) => {
     try {
+      // Update batch basic information
       const response = await fetch(`http://localhost:8080/batch/${id}`, {
         method: 'PUT',
         headers: {
@@ -107,6 +130,39 @@ function BatchDetails() {
       })
 
       if (response.ok) {
+        // Update trainer assignment if changed
+        if (data.trainerId) {
+          await fetch(`http://localhost:8080/batch/${id}/trainer`, {
+            method: 'PUT',
+            headers: {
+              'Content-Type': 'text/uri-list'
+            },
+            body: data.trainerId
+          })
+        }
+
+        // Update coordinator assignment if changed
+        if (data.coordinatorId) {
+          await fetch(`http://localhost:8080/batch/${id}/coordinator`, {
+            method: 'PUT',
+            headers: {
+              'Content-Type': 'text/uri-list'
+            },
+            body: data.coordinatorId
+          })
+        }
+
+        // Update classroom assignment if changed
+        if (data.classroomId) {
+          await fetch(`http://localhost:8080/batch/${id}/classRoom`, {
+            method: 'PUT',
+            headers: {
+              'Content-Type': 'text/uri-list'
+            },
+            body: data.classroomId
+          })
+        }
+
         toast.success('Batch updated successfully!')
         setShowEditForm(false)
         fetchBatchDetails() // Refresh data
@@ -136,6 +192,47 @@ function BatchDetails() {
       } catch (error) {
         console.error('Error deleting batch:', error)
         toast.error('Failed to delete batch')
+      }
+    }
+  }
+
+
+  const deleteEvent = async (eventId, eventName) => {
+    if (window.confirm(`Are you sure you want to delete the event "${eventName}"? This action cannot be undone.`)) {
+      try {
+        const response = await fetch(`http://localhost:8080/event/${eventId}`, {
+          method: 'DELETE'
+        })
+
+        if (response.ok) {
+          toast.success('Event deleted successfully!')
+          fetchBatchDetails() // Refresh data
+        } else {
+          toast.error('Failed to delete event')
+        }
+      } catch (error) {
+        console.error('Error deleting event:', error)
+        toast.error('Failed to delete event')
+      }
+    }
+  }
+
+  const deleteSlot = async (slotId, slotName) => {
+    if (window.confirm(`Are you sure you want to delete the time slot "${slotName}"? This action cannot be undone.`)) {
+      try {
+        const response = await fetch(`http://localhost:8080/slot/${slotId}`, {
+          method: 'DELETE'
+        })
+
+        if (response.ok) {
+          toast.success('Time slot deleted successfully!')
+          fetchBatchDetails() // Refresh data
+        } else {
+          toast.error('Failed to delete time slot')
+        }
+      } catch (error) {
+        console.error('Error deleting time slot:', error)
+        toast.error('Failed to delete time slot')
       }
     }
   }
@@ -170,7 +267,7 @@ function BatchDetails() {
           <div className="d-flex justify-content-between align-items-center">
             <div>
               <h2 className="mb-1">{batch.name}</h2>
-              <p className="text-muted mb-0">Batch ID: #{batch.id}</p>
+              <p className="text-muted mb-0">Batch ID: {batch.id}</p>
             </div>
             <div className="d-flex gap-2">
               <button 
@@ -249,6 +346,62 @@ function BatchDetails() {
                       {errors.genre && <div className="invalid-feedback">{errors.genre.message}</div>}
                     </div>
                   </div>
+
+                  <div className="row">
+                    <div className="col-md-4 mb-3">
+                      <label htmlFor="trainerId" className="form-label">
+                        Trainer
+                      </label>
+                      <select 
+                        className="form-select"
+                        id="trainerId"
+                        {...register("trainerId")}
+                      >
+                        <option value="">Select a trainer...</option>
+                        {trainers.map((trainer) => (
+                          <option key={trainer.id} value={trainer._links.self.href}>
+                            {trainer.name}
+                          </option>
+                        ))}
+                      </select>
+                    </div>
+                    
+                    <div className="col-md-4 mb-3">
+                      <label htmlFor="coordinatorId" className="form-label">
+                        Coordinator
+                      </label>
+                      <select 
+                        className="form-select"
+                        id="coordinatorId"
+                        {...register("coordinatorId")}
+                      >
+                        <option value="">Select a coordinator...</option>
+                        {coordinators.map((coordinator) => (
+                          <option key={coordinator.id} value={coordinator._links.self.href}>
+                            {coordinator.name}
+                          </option>
+                        ))}
+                      </select>
+                    </div>
+                    
+                    <div className="col-md-4 mb-3">
+                      <label htmlFor="classroomId" className="form-label">
+                        Classroom
+                      </label>
+                      <select 
+                        className="form-select"
+                        id="classroomId"
+                        {...register("classroomId")}
+                      >
+                        <option value="">Select a classroom...</option>
+                        {classrooms.map((classroom) => (
+                          <option key={classroom.id} value={classroom._links.self.href}>
+                            {classroom.name}
+                          </option>
+                        ))}
+                      </select>
+                    </div>
+                  </div>
                   
                   <div className="d-flex gap-2">
                     <button type="submit" className="btn btn-primary">
@@ -268,6 +421,7 @@ function BatchDetails() {
           </div>
         </div>
       )}
+
 
       {/* Statistics Cards */}
       <div className="row mb-4">
@@ -310,7 +464,7 @@ function BatchDetails() {
           </div>
         </div>
         
-        <div className="col-lg-3 col-md-6 mb-3">
+        {/* <div className="col-lg-3 col-md-6 mb-3">
           <div className="card text-center">
             <div className="card-body">
               <div className="bg-warning bg-opacity-10 rounded-circle d-inline-flex align-items-center justify-content-center mb-3" 
@@ -334,7 +488,7 @@ function BatchDetails() {
               <p className="text-muted mb-0">Classroom</p>
             </div>
           </div>
-        </div>
+        </div> */}
       </div>
 
       {/* Batch Information */}
@@ -348,7 +502,6 @@ function BatchDetails() {
               <div className="row">
                 <div className="col-sm-6 mb-3">
                   <div className="d-flex align-items-center">
-                    <span className="me-3 text-primary">🏆</span>
                     <div>
                       <small className="text-muted">Certification</small>
                       <div className="fw-semibold">{batch.certification || 'Not specified'}</div>
@@ -357,7 +510,6 @@ function BatchDetails() {
                 </div>
                 <div className="col-sm-6 mb-3">
                   <div className="d-flex align-items-center">
-                    <span className="me-3 text-primary">📖</span>
                     <div>
                       <small className="text-muted">Genre</small>
                       <div className="fw-semibold">{batch.genre || 'Not specified'}</div>
@@ -366,7 +518,6 @@ function BatchDetails() {
                 </div>
                 <div className="col-sm-6 mb-3">
                   <div className="d-flex align-items-center">
-                    <span className="me-3 text-primary">👨‍🏫</span>
                     <div>
                       <small className="text-muted">Trainer</small>
                       <div className="fw-semibold">
@@ -377,7 +528,6 @@ function BatchDetails() {
                 </div>
                 <div className="col-sm-6 mb-3">
                   <div className="d-flex align-items-center">
-                    <span className="me-3 text-primary">👨‍💼</span>
                     <div>
                       <small className="text-muted">Coordinator</small>
                       <div className="fw-semibold">
@@ -388,7 +538,6 @@ function BatchDetails() {
                 </div>
                 <div className="col-sm-6 mb-3">
                   <div className="d-flex align-items-center">
-                    <span className="me-3 text-primary">🏫</span>
                     <div>
                       <small className="text-muted">Classroom</small>
                       <div className="fw-semibold">
@@ -425,19 +574,19 @@ function BatchDetails() {
                   className="btn btn-info"
                   onClick={() => navigate('/add-slot')}
                 >
-                  <span className="me-2"></span>Add Time Slot
+                  <span className="me-2">⏰</span>Add Time Slot
                 </button>
                 <button 
                   className="btn btn-warning"
                   onClick={() => navigate('/add-trainer')}
                 >
-                  <span className="me-2"></span>Assign Trainer
+                  <span className="me-2">👨‍🏫</span>Assign Trainer
                 </button>
                 <button 
                   className="btn btn-secondary"
                   onClick={() => navigate('/add-classRoom')}
                 >
-                  <span className="me-2"></span>Manage Classroom
+                  <span className="me-2">🏛️</span>Manage Classroom
                 </button>
               </div>
             </div>
@@ -475,15 +624,9 @@ function BatchDetails() {
                     <tbody>
                       {students.map((student, i) => (
                         <tr key={i} className="align-middle">
-                          <td className="fw-semibold text-primary">#{student.id}</td>
+                          <td className="fw-semibold">{student.id}</td>
                           <td>
                             <div className="d-flex align-items-center">
-                              {/* <div className="bg-light rounded-circle d-flex align-items-center justify-content-center me-3" 
-                                   style={{width: '40px', height: '40px'}}>
-                                <span className="text-muted">
-                                  {student.gender === 'Male' ? '👨' : student.gender === 'Female' ? '👩' : '👤'}
-                                </span>
-                              </div> */}
                               <div>
                                 <div className="fw-semibold">{student.name}</div>
                                 <small className="text-muted">{student.phoneNo}</small>
@@ -538,20 +681,45 @@ function BatchDetails() {
       <div className="row">
         <div className="col-md-6">
           <div className="card">
-            <div className="card-header">
+            <div className="card-header d-flex justify-content-between align-items-center">
               <h5 className="mb-0">📅 Events ({events.length})</h5>
+              <div className="d-flex gap-2">
+                <button 
+                  className="btn btn-success btn-sm"
+                  onClick={() => navigate('/add-event')}
+                >
+                  <span className="me-1">➕</span>Add Event
+                </button>
+              </div>
             </div>
             <div className="card-body">
               {events.length > 0 ? (
                 <div className="list-group list-group-flush">
                   {events.map((event, i) => (
                     <div key={i} className="list-group-item d-flex justify-content-between align-items-center">
-                      <div>
+                      <div className="flex-grow-1">
                         <h6 className="mb-1">{event.name || `Event ${i + 1}`}</h6>
+                        {event.location && (
+                          <small className="text-muted">📍 {event.location}</small>
+                        )}
+                        {event.description && (
+                          <div className="mt-1">
+                            <small className="text-muted">{event.description}</small>
+                          </div>
+                        )}
                       </div>
-                      <span className="badge bg-primary rounded-pill">
-                        {event.date || 'TBD'}
-                      </span>
+                      <div className="d-flex align-items-center gap-2">
+                        <span className="badge bg-primary rounded-pill">
+                          {event.date ? new Date(event.date).toLocaleDateString() : 'TBD'}
+                        </span>
+                        <button 
+                          className="btn btn-outline-danger btn-sm"
+                          onClick={() => deleteEvent(event.id, event.name)}
+                          title="Delete event"
+                        >
+                          Delete
+                        </button>
+                      </div>
                     </div>
                   ))}
                 </div>
@@ -560,6 +728,12 @@ function BatchDetails() {
                   <div className="text-muted mb-2" style={{fontSize: '2rem'}}>📅</div>
                   <h6 className="text-muted">No events scheduled</h6>
                   <p className="text-muted small">Events will appear here once they are scheduled</p>
+                  <button 
+                    className="btn btn-primary btn-sm mt-2"
+                    onClick={() => navigate('/add-event')}
+                  >
+                    <span className="me-1">🎪</span>Add First Event
+                  </button>
                 </div>
               )}
             </div>
@@ -568,20 +742,47 @@ function BatchDetails() {
         
         <div className="col-md-6">
           <div className="card">
-            <div className="card-header">
+            <div className="card-header d-flex justify-content-between align-items-center">
               <h5 className="mb-0">⏰ Time Slots ({slots.length})</h5>
+              <div className="d-flex gap-2">
+                <button 
+                  className="btn btn-info btn-sm"
+                  onClick={() => navigate('/add-slot')}
+                >
+                  <span className="me-1">➕</span>Add Slot
+                </button>
+              </div>
             </div>
             <div className="card-body">
               {slots.length > 0 ? (
                 <div className="list-group list-group-flush">
                   {slots.map((slot, i) => (
                     <div key={i} className="list-group-item d-flex justify-content-between align-items-center">
-                      <div>
+                      <div className="flex-grow-1">
                         <h6 className="mb-1">{slot.name || `Slot ${i + 1}`}</h6>
+                        <div className="align-items-center gap-2 mb-1">
+                          {slot.day && (
+                            <span className="badge bg-opacity-10 text-secondary" style={{fontSize: '0.75rem'}}>
+                              {slot.day}:
+                            </span>
+                          )}
+                          <span className="badge bg-info rounded-pill" style={{fontSize: '0.75rem'}}>
+                            {slot.startTime || 'TBD'} - {slot.endTime || 'TBD'}
+                          </span>
+                        </div>
+                        {slot.description && (
+                          <small className="text-muted">{slot.description}</small>
+                        )}
                       </div>
-                      <span className="badge bg-info rounded-pill">
-                        {slot.startTime || 'TBD'} - {slot.endTime || 'TBD'}
-                      </span>
+                      <div className="d-flex align-items-center gap-2">
+                        <button 
+                          className="btn btn-outline-danger btn-sm"
+                          onClick={() => deleteSlot(slot.id, slot.name || `Slot ${i + 1}`)}
+                          title="Delete time slot"
+                        >
+                          Delete
+                        </button>
+                      </div>
                     </div>
                   ))}
                 </div>
@@ -590,6 +791,12 @@ function BatchDetails() {
                   <div className="text-muted mb-2" style={{fontSize: '2rem'}}>⏰</div>
                   <h6 className="text-muted">No time slots defined</h6>
                   <p className="text-muted small">Time slots will appear here once they are created</p>
+                  <button 
+                    className="btn btn-info btn-sm mt-2"
+                    onClick={() => navigate('/add-slot')}
+                  >
+                    <span className="me-1">⏰</span>Add First Slot
+                  </button>
                 </div>
               )}
             </div>

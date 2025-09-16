@@ -43,21 +43,21 @@ function AddClassroom() {
       <div className="col-lg-8 col-xl-6">
         <div className="card">
           <div className="card-header text-center">
-            <h4 className="mb-0">🏫 Add New Classroom</h4>
-            <small className="text-muted">Fill in the classroom information below</small>
+            <h4 className="mb-0">🏛️ Add New Studio</h4>
+            <small className="text-muted">Fill in the studio information below</small>
           </div>
           <div className="card-body">
             <form onSubmit={handleSubmit(onSubmit)}>
               <div className="row">
                 <div className="col-md-6 mb-3">
                   <label htmlFor="classroomId" className="form-label">
-                    <span className="me-2">🆔</span>Classroom ID
+                    Studio ID
                   </label>
                   <input 
                     type="number" 
                     className={`form-control ${errors.id ? 'is-invalid' : ''}`}
                     id="classroomId"
-                    placeholder="Enter classroom ID"
+                    placeholder="Enter studio ID"
                     {...register("id", { required: "Classroom ID is required" })}
                   />
                   {errors.id && <div className="invalid-feedback">{errors.id.message}</div>}
@@ -65,13 +65,13 @@ function AddClassroom() {
                 
                 <div className="col-md-6 mb-3">
                   <label htmlFor="classroomName" className="form-label">
-                    <span className="me-2">🏫</span>Classroom Name
+                    Studio Name
                   </label>
                   <input 
                     type="text" 
                     className={`form-control ${errors.name ? 'is-invalid' : ''}`}
                     id="classroomName"
-                    placeholder="Enter classroom name"
+                    placeholder="Enter studio name"
                     {...register("name", { required: "Classroom name is required" })}
                   />
                   {errors.name && <div className="invalid-feedback">{errors.name.message}</div>}
@@ -84,7 +84,7 @@ function AddClassroom() {
                   className="btn btn-outline-secondary me-md-2"
                   onClick={() => reset()}
                 >
-                  <span className="me-2">🔄</span> Reset
+                  Reset
                 </button>
                 <button 
                   type="submit" 
@@ -98,7 +98,7 @@ function AddClassroom() {
                     </>
                   ) : (
                     <>
-                      <span className="me-2">🏫</span> Add Classroom
+                      Add Studio
                     </>
                   )}
                 </button>

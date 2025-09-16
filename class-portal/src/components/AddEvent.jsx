@@ -68,21 +68,21 @@ function AddEvent() {
       <div className="col-lg-8 col-xl-6">
         <div className="card">
           <div className="card-header text-center">
-            <h4 className="mb-0">📅 Add New Event</h4>
-            <small className="text-muted">Fill in the event information below</small>
+            <h4 className="mb-0">🎪 Add New Performance</h4>
+            <small className="text-muted">Fill in the performance information below</small>
           </div>
           <div className="card-body">
             <form onSubmit={handleSubmit(onSubmit)}>
               <div className="row">
                 <div className="col-md-6 mb-3">
                   <label htmlFor="eventId" className="form-label">
-                    <span className="me-2">🆔</span>Event ID
+                    Performance ID
                   </label>
                   <input 
                     type="number" 
                     className={`form-control ${errors.id ? 'is-invalid' : ''}`}
                     id="eventId"
-                    placeholder="Enter event ID"
+                    placeholder="Enter performance ID"
                     {...register("id", { required: "Event ID is required" })}
                   />
                   {errors.id && <div className="invalid-feedback">{errors.id.message}</div>}
@@ -90,13 +90,13 @@ function AddEvent() {
                 
                 <div className="col-md-6 mb-3">
                   <label htmlFor="eventName" className="form-label">
-                    <span className="me-2">📅</span>Event Name
+                    Performance Name
                   </label>
                   <input 
                     type="text" 
                     className={`form-control ${errors.name ? 'is-invalid' : ''}`}
                     id="eventName"
-                    placeholder="Enter event name"
+                    placeholder="Enter performance name"
                     {...register("name", { required: "Event name is required" })}
                   />
                   {errors.name && <div className="invalid-feedback">{errors.name.message}</div>}
@@ -106,7 +106,7 @@ function AddEvent() {
               <div className="row">
                 <div className="col-md-6 mb-3">
                   <label htmlFor="eventDate" className="form-label">
-                    <span className="me-2">📆</span>Event Date
+                    Performance Date
                   </label>
                   <input 
                     type="date" 
@@ -119,7 +119,7 @@ function AddEvent() {
                 
                 <div className="col-md-6 mb-3">
                   <label htmlFor="eventLocation" className="form-label">
-                    <span className="me-2">📍</span>Location
+                    Location
                   </label>
                   <input 
                     type="text" 
@@ -134,14 +134,14 @@ function AddEvent() {
 
               <div className="mb-4">
                 <label htmlFor="batchSelect" className="form-label">
-                  <span className="me-2">📚</span>Select Batch
+                  Select Dance Class
                 </label>
                 <select 
                   className={`form-select ${errors.batch ? 'is-invalid' : ''}`}
                   id="batchSelect"
                   {...register("batch", { required: "Batch selection is required" })}
                 >
-                  <option value="">Choose a batch...</option>
+                  <option value="">Choose a dance class...</option>
                   {bat && bat.map((c, i) => (
                     <option value={c._links.self.href} key={i}>
                       {c.name}
@@ -157,7 +157,7 @@ function AddEvent() {
                   className="btn btn-outline-secondary me-md-2"
                   onClick={() => reset()}
                 >
-                  <span className="me-2">🔄</span> Reset
+                  Reset
                 </button>
                 <button 
                   type="submit" 
@@ -171,7 +171,7 @@ function AddEvent() {
                     </>
                   ) : (
                     <>
-                      <span className="me-2">📅</span> Add Event
+                      Add Performance
                     </>
                   )}
                 </button>

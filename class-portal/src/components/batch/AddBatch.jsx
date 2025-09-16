@@ -126,21 +126,21 @@ function AddBatch() {
       <div className="col-lg-8 col-xl-6">
         <div className="card">
           <div className="card-header text-center">
-            <h4 className="mb-0">📚 Add New Batch</h4>
-            <small className="text-muted">Fill in the batch information below</small>
+            <h4 className="mb-0">🎭 Add New Dance Class</h4>
+            <small className="text-muted">Fill in the dance class information below</small>
           </div>
           <div className="card-body">
             <form onSubmit={handleSubmit(onSubmit)}>
               <div className="row">
                 <div className="col-md-6 mb-3">
                   <label htmlFor="batchId" className="form-label">
-                    <span className="me-2">🆔</span>Batch ID
+                    Dance Class ID
                   </label>
                   <input 
                     type="number" 
                     className={`form-control ${errors.id ? 'is-invalid' : ''}`}
                     id="batchId"
-                    placeholder="Enter batch ID"
+                    placeholder="Enter dance class ID"
                     {...register("id", { required: "Batch ID is required" })}
                   />
                   {errors.id && <div className="invalid-feedback">{errors.id.message}</div>}
@@ -148,13 +148,13 @@ function AddBatch() {
                 
                 <div className="col-md-6 mb-3">
                   <label htmlFor="batchName" className="form-label">
-                    <span className="me-2">📚</span>Batch Name
+                    Dance Class Name
                   </label>
                   <input 
                     type="text" 
                     className={`form-control ${errors.name ? 'is-invalid' : ''}`}
                     id="batchName"
-                    placeholder="Enter batch name"
+                    placeholder="Enter dance class name"
                     {...register("name", { required: "Batch name is required" })}
                   />
                   {errors.name && <div className="invalid-feedback">{errors.name.message}</div>}
@@ -164,7 +164,7 @@ function AddBatch() {
               <div className="row">
                 <div className="col-md-6 mb-3">
                   <label htmlFor="certification" className="form-label">
-                    <span className="me-2">🏆</span>Certification
+                    Certification
                   </label>
                   <input 
                     type="text" 
@@ -178,13 +178,13 @@ function AddBatch() {
                 
                 <div className="col-md-6 mb-3">
                   <label htmlFor="genre" className="form-label">
-                    <span className="me-2">📖</span>Genre
+                    Dance Style
                   </label>
                   <input 
                     type="text" 
                     className={`form-control ${errors.genre ? 'is-invalid' : ''}`}
                     id="genre"
-                    placeholder="Enter genre"
+                    placeholder="Enter dance style (e.g., Ballet, Hip-Hop, Contemporary)"
                     {...register("genre", { required: "Genre is required" })}
                   />
                   {errors.genre && <div className="invalid-feedback">{errors.genre.message}</div>}
@@ -194,14 +194,14 @@ function AddBatch() {
               <div className="row">
                 <div className="col-md-4 mb-3">
                   <label htmlFor="classroomSelect" className="form-label">
-                    <span className="me-2">🏫</span>Select Classroom
+                    Select Studio
                   </label>
                   <select 
                     className={`form-select ${errors.classRoom ? 'is-invalid' : ''}`}
                     id="classroomSelect"
                     {...register("classRoom", { required: "Classroom selection is required" })}
                   >
-                    <option value="">Choose a classroom...</option>
+                    <option value="">Choose a studio...</option>
                     {cla && cla.map((c, i) => (
                       <option value={c._links.self.href} key={i}>
                         {c.name}
@@ -213,14 +213,14 @@ function AddBatch() {
                 
                 <div className="col-md-4 mb-3">
                   <label htmlFor="trainerSelect" className="form-label">
-                    <span className="me-2">👨‍🏫</span>Select Trainer
+                    Select Instructor
                   </label>
                   <select 
                     className={`form-select ${errors.trainer ? 'is-invalid' : ''}`}
                     id="trainerSelect"
                     {...register("trainer", { required: "Trainer selection is required" })}
                   >
-                    <option value="">Choose a trainer...</option>
+                    <option value="">Choose an instructor...</option>
                     {tra && tra.map((c, i) => (
                       <option value={c._links.self.href} key={i}>
                         {c.name}
@@ -232,7 +232,7 @@ function AddBatch() {
                 
                 <div className="col-md-4 mb-3">
                   <label htmlFor="coordinatorSelect" className="form-label">
-                    <span className="me-2">👨‍💼</span>Select Coordinator
+                    Select Coordinator
                   </label>
                   <select 
                     className={`form-select ${errors.coordinator ? 'is-invalid' : ''}`}
@@ -256,7 +256,7 @@ function AddBatch() {
                   className="btn btn-outline-secondary me-md-2"
                   onClick={() => reset()}
                 >
-                  <span className="me-2">🔄</span> Reset
+                  Reset
                 </button>
                 <button 
                   type="submit" 
@@ -270,7 +270,7 @@ function AddBatch() {
                     </>
                   ) : (
                     <>
-                      <span className="me-2">📚</span> Add Batch
+                      Add Dance Class
                     </>
                   )}
                 </button>

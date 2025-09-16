@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react'
+import React, { useState, useEffect, useCallback } from 'react'
 import Sidebar from './Sidebar'
 import Navbar from './Navbar'
 import { Outlet } from 'react-router-dom'
@@ -18,9 +18,13 @@ function Layout() {
     return () => window.removeEventListener('resize', checkScreenSize);
   }, []);
 
+  const toggleSidebar = useCallback(() => {
+    setIsSidebarCollapsed(prev => !prev);
+  }, []);
+
   return (
     <div className="min-vh-100 bg-light">
-      <Sidebar onToggle={setIsSidebarCollapsed}/>
+      <Sidebar onToggle={setIsSidebarCollapsed} isCollapsed={isSidebarCollapsed}/>
       <div 
         className="main-content-wrapper"
         style={{
@@ -29,8 +33,14 @@ function Layout() {
           minHeight: '100vh'
         }}
       >
-        <Navbar />
-        <main className="main-content" style={{ padding: '2rem' }}>
+        <Navbar 
+          isSidebarCollapsed={isSidebarCollapsed}
+          onToggleSidebar={toggleSidebar}
+          isMobile={isMobile}
+        />
+        <main className="main-content" style={{ 
+          padding: isSidebarCollapsed && !isMobile ? '2rem 2rem 2rem 5rem' : '2rem'
+        }}>
           <div className="fade-in">
             <Outlet />
           </div>

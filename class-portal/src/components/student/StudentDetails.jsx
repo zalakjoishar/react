@@ -47,7 +47,7 @@ function StudentDetails({id, name, age, gender, phoneNo, emailId, batch}) {
               backgroundColor: 'white',
               borderRadius: '8px',
               padding: 0,
-              maxWidth: '600px',
+              maxWidth: '700px',
               width: '90%',
               maxHeight: '90vh',
               overflow: 'auto',
@@ -112,7 +112,7 @@ function StudentDetails({id, name, age, gender, phoneNo, emailId, batch}) {
                 {/* Left side - Avatar and basic info */}
                 <div style={{ textAlign: 'center', flex: '0 0 180px' }}>
                   <h5 style={{ margin: '0 0 8px', color: '#333', fontSize: '1.1rem' }}>{name}</h5>
-                  <p style={{ color: '#6c757d', margin: 0, fontSize: '0.9rem' }}>Student ID: #{id}</p>
+                  <p style={{ color: '#6c757d', margin: 0, fontSize: '0.9rem' }}>Student ID: {id}</p>
                 </div>
                 
                 {/* Right side - Details */}
@@ -133,7 +133,7 @@ function StudentDetails({id, name, age, gender, phoneNo, emailId, batch}) {
                       borderRadius: '8px',
                       border: '1px solid #e9ecef'
                     }}>
-                      <span style={{ color: '#2196f3', fontSize: '20px' }}>🎂</span>
+                      <span style={{ color: '#2196f3', fontSize: '20px' }}></span>
                       <div>
                         <div style={{ color: '#6c757d', fontSize: '0.8rem', fontWeight: '500' }}>Age</div>
                         <div style={{ fontWeight: '600', color: '#333' }}>{age} years</div>
@@ -150,7 +150,7 @@ function StudentDetails({id, name, age, gender, phoneNo, emailId, batch}) {
                       borderRadius: '8px',
                       border: '1px solid #e9ecef'
                     }}>
-                      <span style={{ color: '#2196f3', fontSize: '20px' }}>⚧</span>
+                      <span style={{ color: '#2196f3', fontSize: '20px' }}></span>
                       <div>
                         <div style={{ color: '#6c757d', fontSize: '0.8rem', fontWeight: '500' }}>Gender</div>
                         <div style={{ fontWeight: '600', color: '#333' }}>{gender}</div>
@@ -167,7 +167,7 @@ function StudentDetails({id, name, age, gender, phoneNo, emailId, batch}) {
                       borderRadius: '8px',
                       border: '1px solid #e9ecef'
                     }}>
-                      <span style={{ color: '#2196f3', fontSize: '20px' }}>📱</span>
+                      <span style={{ color: '#2196f3', fontSize: '20px' }}></span>
                       <div>
                         <div style={{ color: '#6c757d', fontSize: '0.8rem', fontWeight: '500' }}>Phone Number</div>
                         <div style={{ fontWeight: '600', color: '#333' }}>{phoneNo}</div>
@@ -184,7 +184,7 @@ function StudentDetails({id, name, age, gender, phoneNo, emailId, batch}) {
                       borderRadius: '8px',
                       border: '1px solid #e9ecef'
                     }}>
-                      <span style={{ color: '#2196f3', fontSize: '20px' }}>📧</span>
+                      <span style={{ color: '#2196f3', fontSize: '20px' }}></span>
                       <div>
                         <div style={{ color: '#6c757d', fontSize: '0.8rem', fontWeight: '500' }}>Email Address</div>
                         <div style={{ fontWeight: '600', color: '#333' }}>{emailId}</div>
@@ -202,14 +202,12 @@ function StudentDetails({id, name, age, gender, phoneNo, emailId, batch}) {
                       border: '1px solid #e9ecef',
                       gridColumn: '1 / -1'
                     }}>
-                      <span style={{ color: '#2196f3', fontSize: '20px' }}>📚</span>
+                      <span style={{ color: '#2196f3', fontSize: '20px' }}></span>
                       <div>
                         <div style={{ color: '#6c757d', fontSize: '0.8rem', fontWeight: '500' }}>Batch</div>
                         <div style={{ fontWeight: '600', color: '#333' }}>
                           {batch && batch.name ? (
                             <span style={{
-                              backgroundColor: '#2196f3',
-                              color: 'white',
                               padding: '4px 12px',
                               borderRadius: '16px',
                               fontSize: '0.85rem',
@@ -270,7 +268,7 @@ function StudentDetails({id, name, age, gender, phoneNo, emailId, batch}) {
                   e.target.style.backgroundColor = '#6c757d'
                 }}
               >
-                ✕
+                Close
               </button>
               <button 
                 type="button"
@@ -292,7 +290,7 @@ function StudentDetails({id, name, age, gender, phoneNo, emailId, batch}) {
                   e.target.style.backgroundColor = '#2196f3'
                 }}
               >
-                ✏️ Edit Student
+                Edit Student
               </button>
             </div>
           </div>

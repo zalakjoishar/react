@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react'
 import { Link, useLocation } from 'react-router-dom'
 
-function Sidebar({ onToggle }) {
+function Sidebar({ onToggle, isCollapsed: externalIsCollapsed }) {
   const location = useLocation();
   const [isCollapsed, setIsCollapsed] = useState(false);
   const [isMobile, setIsMobile] = useState(false);
@@ -10,15 +10,15 @@ function Sidebar({ onToggle }) {
   
   const navItems = [
     { path: "/", label: "Dashboard", icon: "🏠", keywords: ["dashboard", "home", "main"] },
-    { path: "/student", label: "Students", icon: "👥", keywords: ["students", "student", "list", "view"] },
+    { path: "/student", label: "Students", icon: "💃", keywords: ["students", "student", "list", "view"] },
     { path: "/add-student", label: "Add Student", icon: "➕", keywords: ["add", "student", "new", "create"] },
-    { path: "/batch", label: "Batches", icon: "📚", keywords: ["batches", "batch", "list", "view"] },
-    { path: "/add-batch", label: "Add Batch", icon: "➕", keywords: ["add", "batch", "new", "create"] },
-    { path: "/add-classRoom", label: "Add Classroom", icon: "🏫", keywords: ["add", "classroom", "room", "new", "create"] },
-    { path: "/add-event", label: "Add Event", icon: "📅", keywords: ["add", "event", "new", "create", "schedule"] },
+    { path: "/batch", label: "Dance Classes", icon: "🎭", keywords: ["classes", "batch", "dance", "list", "view"] },
+    { path: "/add-batch", label: "Add Dance Class", icon: "➕", keywords: ["add", "class", "batch", "dance", "new", "create"] },
+    { path: "/add-classRoom", label: "Add Studio", icon: "🏛️", keywords: ["add", "studio", "room", "dance", "new", "create"] },
+    { path: "/add-event", label: "Add Performance", icon: "🎪", keywords: ["add", "performance", "event", "show", "new", "create", "schedule"] },
     { path: "/add-coordinator", label: "Add Coordinator", icon: "👨‍💼", keywords: ["add", "coordinator", "new", "create", "staff"] },
-    { path: "/add-trainer", label: "Add Trainer", icon: "👨‍🏫", keywords: ["add", "trainer", "teacher", "new", "create", "staff"] },
-    { path: "/add-slot", label: "Add Slot", icon: "⏰", keywords: ["add", "slot", "time", "schedule", "new", "create"] }
+    { path: "/add-trainer", label: "Add Instructor", icon: "👨‍🏫", keywords: ["add", "instructor", "trainer", "teacher", "dance", "new", "create", "staff"] },
+    { path: "/add-slot", label: "Add Time Slot", icon: "⏰", keywords: ["add", "slot", "time", "schedule", "new", "create"] }
   ];
 
   useEffect(() => {
@@ -27,6 +27,7 @@ function Sidebar({ onToggle }) {
       setIsMobile(mobile);
       if (mobile) {
         setIsCollapsed(true);
+        if (onToggle) onToggle(true);
       }
     };
 
@@ -34,7 +35,14 @@ function Sidebar({ onToggle }) {
     window.addEventListener('resize', checkScreenSize);
 
     return () => window.removeEventListener('resize', checkScreenSize);
-  }, []);
+  }, [onToggle]);
+
+  // Sync with external state
+  useEffect(() => {
+    if (externalIsCollapsed !== undefined) {
+      setIsCollapsed(externalIsCollapsed);
+    }
+  }, [externalIsCollapsed]);
 
   // Initialize filtered items
   useEffect(() => {
@@ -114,42 +122,35 @@ function Sidebar({ onToggle }) {
            }}>
         
         {/* Header */}
-        <div className="sidebar-header p-3 border-bottom">
+        <div className="sidebar-header border-bottom" style={{padding: '0.4rem'}}>
           <div className="d-flex align-items-center justify-content-center">
             {isCollapsed ? (
-              <div className="bg-primary text-white rounded-circle d-flex align-items-center justify-content-center" 
-                   style={{width: '40px', height: '40px', fontSize: '18px'}}>
-                🎓
+              <div className="d-flex flex-column align-items-center justify-content-center">
+                <div className="d-flex align-items-center justify-content-center" 
+                     style={{padding: '0.125rem', width: '50px', height: '50px'}}>
+                  <img 
+                    src="/dantra logo.png" 
+                    alt="Dantra Logo" 
+                    style={{width: '50px', height: '50px', objectFit: 'contain'}}
+                  />
+                </div>
               </div>
             ) : (
               <>
-                <div className="bg-primary text-white rounded-circle d-flex align-items-center justify-content-center me-3" 
-                     style={{width: '40px', height: '40px', fontSize: '18px', minWidth: '40px'}}>
-                  🎓
+                <div className="d-flex align-items-center justify-content-center me-3" 
+                     style={{width: '50px', height: '50px', minWidth: '50px'}}>
+                  <img 
+                    src="/dantra logo.png" 
+                    alt="Dantra Logo" 
+                    style={{width: '50px', height: '50px', objectFit: 'contain'}}
+                  />
                 </div>
                 <div className="flex-grow-1">
-                  <div className="fw-bold mb-0" style={{color: '#475569'}}>Class Portal</div>
-                  <small style={{color: '#64748b'}}>Education Management</small>
+                  <div className="fw-bold mb-0" style={{color: '#475569'}}>Dantra</div>
+                  <small style={{color: '#64748b'}}>Portal</small>
                 </div>
               </>
             )}
-            <button 
-              className="btn btn-outline-secondary btn-sm"
-              onClick={toggleSidebar}
-              style={{
-                minWidth: '32px', 
-                height: '32px',
-                display: 'flex',
-                alignItems: 'center',
-                justifyContent: 'center',
-                fontSize: '12px',
-                fontWeight: 'normal',
-                marginLeft: isCollapsed ? '0' : 'auto'
-              }}
-              title={isCollapsed ? 'Expand sidebar' : 'Collapse sidebar'}
-            >
-              {isCollapsed ? '☰' : '☰'}
-            </button>
           </div>
         </div>
 
@@ -205,7 +206,7 @@ function Sidebar({ onToggle }) {
                       transition: 'all 0.2s ease',
                       fontWeight: location.pathname === item.path ? '600' : '500',
                       textDecoration: 'none',
-                      backgroundColor: location.pathname === item.path ? '#3b82f6' : 'transparent',
+                      backgroundColor: location.pathname === item.path ? '#8B5CF6' : 'transparent',
                       color: location.pathname === item.path ? 'white' : '#475569'
                     }}
                     title={isCollapsed ? item.label : ''}

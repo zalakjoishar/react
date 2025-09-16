@@ -54,7 +54,7 @@ function AddCoordinator() {
               <div className="row">
                 <div className="col-md-6 mb-3">
                   <label htmlFor="coordinatorId" className="form-label">
-                    <span className="me-2">🆔</span>Coordinator ID
+                    Coordinator ID
                   </label>
                   <input 
                     type="number" 
@@ -68,7 +68,7 @@ function AddCoordinator() {
                 
                 <div className="col-md-6 mb-3">
                   <label htmlFor="coordinatorName" className="form-label">
-                    <span className="me-2">👤</span>Full Name
+                    Full Name
                   </label>
                   <input 
                     type="text" 
@@ -84,7 +84,7 @@ function AddCoordinator() {
               <div className="row">
                 <div className="col-md-6 mb-3">
                   <label htmlFor="phoneNo" className="form-label">
-                    <span className="me-2">📱</span>Phone Number
+                    Phone Number
                   </label>
                   <input 
                     type="tel" 
@@ -98,7 +98,7 @@ function AddCoordinator() {
                 
                 <div className="col-md-6 mb-3">
                   <label htmlFor="emailId" className="form-label">
-                    <span className="me-2">📧</span>Email Address
+                    Email Address
                   </label>
                   <input 
                     type="email" 
@@ -113,7 +113,7 @@ function AddCoordinator() {
 
               <div className="mb-4">
                 <label htmlFor="password" className="form-label">
-                  <span className="me-2">🔒</span>Password
+                  Password
                 </label>
                 <input 
                   type="password" 
@@ -131,7 +131,7 @@ function AddCoordinator() {
                   className="btn btn-outline-secondary me-md-2"
                   onClick={() => reset()}
                 >
-                  <span className="me-2">🔄</span> Reset
+                  Reset
                 </button>
                 <button 
                   type="submit" 
@@ -145,7 +145,7 @@ function AddCoordinator() {
                     </>
                   ) : (
                     <>
-                      <span className="me-2">👨‍💼</span> Add Coordinator
+                      Add Coordinator
                     </>
                   )}
                 </button>

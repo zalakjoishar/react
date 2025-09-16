@@ -46,21 +46,21 @@ function AddTrainer() {
       <div className="col-lg-8 col-xl-6">
         <div className="card">
           <div className="card-header text-center">
-            <h4 className="mb-0">👨‍🏫 Add New Trainer</h4>
-            <small className="text-muted">Fill in the trainer information below</small>
+            <h4 className="mb-0">👨‍🏫 Add New Instructor</h4>
+            <small className="text-muted">Fill in the instructor information below</small>
           </div>
           <div className="card-body">
             <form onSubmit={handleSubmit(onSubmit)}>
               <div className="row">
                 <div className="col-md-6 mb-3">
                   <label htmlFor="trainerId" className="form-label">
-                    <span className="me-2">🆔</span>Trainer ID
+                    Instructor ID
                   </label>
                   <input 
                     type="number" 
                     className={`form-control ${errors.id ? 'is-invalid' : ''}`}
                     id="trainerId"
-                    placeholder="Enter trainer ID"
+                    placeholder="Enter instructor ID"
                     {...register("id", { required: "Trainer ID is required" })}
                   />
                   {errors.id && <div className="invalid-feedback">{errors.id.message}</div>}
@@ -68,7 +68,7 @@ function AddTrainer() {
                 
                 <div className="col-md-6 mb-3">
                   <label htmlFor="trainerName" className="form-label">
-                    <span className="me-2">👤</span>Full Name
+                    Full Name
                   </label>
                   <input 
                     type="text" 
@@ -84,7 +84,7 @@ function AddTrainer() {
               <div className="row">
                 <div className="col-md-6 mb-3">
                   <label htmlFor="phoneNo" className="form-label">
-                    <span className="me-2">📱</span>Phone Number
+                    Phone Number
                   </label>
                   <input 
                     type="tel" 
@@ -98,7 +98,7 @@ function AddTrainer() {
                 
                 <div className="col-md-6 mb-3">
                   <label htmlFor="emailId" className="form-label">
-                    <span className="me-2">📧</span>Email Address
+                    Email Address
                   </label>
                   <input 
                     type="email" 
@@ -113,7 +113,7 @@ function AddTrainer() {
 
               <div className="mb-4">
                 <label htmlFor="password" className="form-label">
-                  <span className="me-2">🔒</span>Password
+                  Password
                 </label>
                 <input 
                   type="password" 
@@ -131,7 +131,7 @@ function AddTrainer() {
                   className="btn btn-outline-secondary me-md-2"
                   onClick={() => reset()}
                 >
-                  <span className="me-2">🔄</span> Reset
+                  Reset
                 </button>
                 <button 
                   type="submit" 
@@ -145,7 +145,7 @@ function AddTrainer() {
                     </>
                   ) : (
                     <>
-                      <span className="me-2">👨‍🏫</span> Add Trainer
+                      Add Instructor
                     </>
                   )}
                 </button>

@@ -67,7 +67,7 @@ function AddStudent() {
       <div className="col-lg-8 col-xl-6">
         <div className="card">
           <div className="card-header text-center">
-            <h4 className="mb-0">👥 Add New Student</h4>
+            <h4 className="mb-0">💃 Add New Student</h4>
             <small className="text-muted">Fill in the student information below</small>
           </div>
           <div className="card-body">
@@ -75,7 +75,7 @@ function AddStudent() {
               <div className="row">
                 <div className="col-md-6 mb-3">
                   <label htmlFor="studentId" className="form-label">
-                    <span className="me-2">🆔</span>Student ID
+                    Student ID
                   </label>
                   <input 
                     type="number" 
@@ -89,7 +89,7 @@ function AddStudent() {
                 
                 <div className="col-md-6 mb-3">
                   <label htmlFor="studentName" className="form-label">
-                    <span className="me-2">👤</span>Full Name
+                    Full Name
                   </label>
                   <input 
                     type="text" 
@@ -105,7 +105,7 @@ function AddStudent() {
               <div className="row">
                 <div className="col-md-6 mb-3">
                   <label htmlFor="studentAge" className="form-label">
-                    <span className="me-2">🎂</span>Age
+                    Age
                   </label>
                   <input 
                     type="number" 
@@ -121,7 +121,7 @@ function AddStudent() {
                 
                 <div className="col-md-6 mb-3">
                   <label className="form-label">
-                    <span className="me-2">⚧</span>Gender
+                    Gender
                   </label>
                   <div className="d-flex gap-3">
                     <div className="form-check">
@@ -158,7 +158,7 @@ function AddStudent() {
               <div className="row">
                 <div className="col-md-6 mb-3">
                   <label htmlFor="phoneNo" className="form-label">
-                    <span className="me-2">📱</span>Phone Number
+                    Phone Number
                   </label>
                   <input 
                     type="tel" 
@@ -172,7 +172,7 @@ function AddStudent() {
                 
                 <div className="col-md-6 mb-3">
                   <label htmlFor="emailId" className="form-label">
-                    <span className="me-2">📧</span>Email Address
+                    Email Address
                   </label>
                   <input 
                     type="email" 
@@ -187,14 +187,14 @@ function AddStudent() {
 
               <div className="mb-4">
                   <label htmlFor="batchSelect" className="form-label">
-                    <span className="me-2">📚</span>Select Batch
+                    Select Dance Class
                   </label>
                 <select 
                   className={`form-select ${errors.batch ? 'is-invalid' : ''}`}
                   id="batchSelect"
                   {...register("batch", { required: "Batch selection is required" })}
                 >
-                  <option value="">Choose a batch...</option>
+                  <option value="">Choose a dance class...</option>
                   {bat && bat.map((c, i) => (
                     <option value={c._links.self.href} key={i}>
                       {c.name}
@@ -210,7 +210,7 @@ function AddStudent() {
                     className="btn btn-outline-secondary me-md-2"
                     onClick={() => reset()}
                   >
-                    <span className="me-2">🔄</span> Reset
+                    Reset
                   </button>
                 <button 
                   type="submit" 
@@ -224,7 +224,7 @@ function AddStudent() {
                     </>
                   ) : (
                     <>
-                      <span className="me-2">👥</span> Add Student
+                      Add Student
                     </>
                   )}
                 </button>

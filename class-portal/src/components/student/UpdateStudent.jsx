@@ -163,7 +163,7 @@ function UpdateStudent({id, name, age, gender, phoneNo, emailId, batch, refresh}
         <div className="modal-content">
           <div className="modal-header">
             <h5 className="modal-title" id={`exampleModalLabel1${safeId}`}>
-              ✏️ Update Student
+              Update Student
             </h5>
             <button type="button" className="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
           </div>
@@ -172,7 +172,7 @@ function UpdateStudent({id, name, age, gender, phoneNo, emailId, batch, refresh}
               <div className="row">
                 <div className="col-md-6 mb-3">
                   <label htmlFor={`studentName${safeId}`} className="form-label">
-                    <span className="me-2">👤</span>Full Name
+                    Full Name
                   </label>
                   <input 
                     type="text" 
@@ -186,7 +186,7 @@ function UpdateStudent({id, name, age, gender, phoneNo, emailId, batch, refresh}
                 
                 <div className="col-md-6 mb-3">
                   <label htmlFor={`studentAge${safeId}`} className="form-label">
-                    <span className="me-2">🎂</span>Age
+                    Age
                   </label>
                   <input 
                     type="number" 
@@ -204,7 +204,7 @@ function UpdateStudent({id, name, age, gender, phoneNo, emailId, batch, refresh}
               <div className="row">
                 <div className="col-md-6 mb-3">
                   <label className="form-label">
-                    <span className="me-2">⚧</span>Gender
+                    Gender
                   </label>
                   <div className="d-flex gap-3">
                     <div className="form-check">
@@ -217,7 +217,7 @@ function UpdateStudent({id, name, age, gender, phoneNo, emailId, batch, refresh}
                         {...register("gender", { required: "Gender is required" })}
                       />
                       <label className="form-check-label" htmlFor={`male${safeId}`}>
-                        👨 Male
+                        Male
                       </label>
                     </div>
                     <div className="form-check">
@@ -230,7 +230,7 @@ function UpdateStudent({id, name, age, gender, phoneNo, emailId, batch, refresh}
                         {...register("gender", { required: "Gender is required" })}
                       />
                       <label className="form-check-label" htmlFor={`female${safeId}`}>
-                        👩 Female
+                        Female
                       </label>
                     </div>
                   </div>
@@ -239,7 +239,7 @@ function UpdateStudent({id, name, age, gender, phoneNo, emailId, batch, refresh}
                 
                 <div className="col-md-6 mb-3">
                   <label htmlFor={`phoneNo${safeId}`} className="form-label">
-                    <span className="me-2">📱</span>Phone Number
+                    Phone Number
                   </label>
                   <input 
                     type="tel" 
@@ -255,7 +255,7 @@ function UpdateStudent({id, name, age, gender, phoneNo, emailId, batch, refresh}
               <div className="row">
                 <div className="col-md-6 mb-3">
                   <label htmlFor={`emailId${safeId}`} className="form-label">
-                    <span className="me-2">📧</span>Email Address
+                    Email Address
                   </label>
                   <input 
                     type="email" 
@@ -269,7 +269,7 @@ function UpdateStudent({id, name, age, gender, phoneNo, emailId, batch, refresh}
                 
                 <div className="col-md-6 mb-3">
                   <label htmlFor={`batchSelect${safeId}`} className="form-label">
-                    <span className="me-2">📚</span>Select Batch
+                    Select Batch
                   </label>
                   <select 
                     className={`form-select ${errors.batch ? 'is-invalid' : ''}`}
@@ -293,14 +293,14 @@ function UpdateStudent({id, name, age, gender, phoneNo, emailId, batch, refresh}
                   className="btn btn-outline-danger me-md-2"
                   onClick={deleteStudent}
                 >
-                  <span className="me-2">🗑️</span>Delete Student
+                  Delete Student
                 </button>
                 <button 
                   type="button" 
                   className="btn btn-outline-secondary me-md-2"
                   data-bs-dismiss="modal"
                 >
-                  ✕
+                  Close
                 </button>
                 <button 
                   type="submit" 
@@ -314,7 +314,7 @@ function UpdateStudent({id, name, age, gender, phoneNo, emailId, batch, refresh}
                     </>
                   ) : (
                     <>
-                      💾 Update Student
+                      Update Student
                     </>
                   )}
                 </button>
