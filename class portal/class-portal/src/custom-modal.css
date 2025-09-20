@@ -1,0 +1,68 @@
+/* CUSTOM MODAL STYLES - NO BLINKING */
+.modal-overlay {
+  transition: none !important;
+  animation: none !important;
+  transform: none !important;
+}
+
+.modal-overlay:hover {
+  transition: none !important;
+  animation: none !important;
+  transform: none !important;
+}
+
+.modal-content-custom {
+  transition: none !important;
+  animation: none !important;
+  transform: none !important;
+}
+
+.modal-content-custom:hover {
+  transition: none !important;
+  animation: none !important;
+  transform: none !important;
+}
+
+.modal-content-custom * {
+  transition: none !important;
+  animation: none !important;
+  transform: none !important;
+}
+
+.modal-content-custom:hover * {
+  transition: none !important;
+  animation: none !important;
+  transform: none !important;
+}
+
+/* DISABLE ALL POSSIBLE HOVER EFFECTS */
+.modal-overlay *,
+.modal-content-custom * {
+  transition: none !important;
+  animation: none !important;
+  transform: none !important;
+  will-change: auto !important;
+  backface-visibility: visible !important;
+  perspective: none !important;
+}
+
+.modal-overlay:hover *,
+.modal-content-custom:hover * {
+  transition: none !important;
+  animation: none !important;
+  transform: none !important;
+  will-change: auto !important;
+  backface-visibility: visible !important;
+  perspective: none !important;
+}
+
+
+
+
+
+
+
+
+
+
+
