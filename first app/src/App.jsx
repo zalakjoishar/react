@@ -1,20 +1,17 @@
-import { useState } from 'react'
-import reactLogo from './assets/react.svg'
-import viteLogo from '/vite.svg'
-import './App.css'
-import A from './components/A'
+import React from "react";
+import { CartProvider } from "./component/CartProvider";
+import ProductList from "./component/ProductList";
+import Cart from "./component/Cart";
 
 function App() {
-  
-
   return (
-    <>
-      <h1>Hello</h1>
-      <p>We are learning</p>
-      <hr />
-      <A/>
-    </>
-  )
+    <CartProvider>
+      <div style={{ display: "flex", justifyContent: "space-around" }}>
+        <ProductList />
+        <Cart />
+      </div>
+    </CartProvider>
+  );
 }
 
-export default App
+export default App;
